@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <title>SeñaMex</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Custom Google font-->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+        <script src="http://localhost:3000/socket.io/socket.io.min.js" defer></script>
+        <script src="js/script.js" defer></script>
+    </head>
+    <body class="d-flex flex-column" background="/assets/hero.png">
+        <main class="flex-shrink-0">
+            <!-- Navigation-->
+            <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+                <div class="container px-5">
+                    <a class="navbar-brand" href="index.html"><span class="fw-bolder text-primary">SeñaMex</span></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
+                            <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                            <li class="nav-item"><a class="nav-link" href="alfabeto.html">Gestos del Alfabeto</a></li>
+                            <li class="nav-item"><a class="nav-link" href="proyecto.html">Sobre el proyecto</a></li>
+                            <li class="nav-item"><a class="nav-link" href="contacto.html">Equipo</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div class="container px-5 my-5">
+            <div class="text-center mb-5">
+              <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Aprende el Alfabeto</span></h1>
+          </div></div>
+            <div class="header-container">
+              <div class="header-left">
+                <h1>Mejora la interacción <br>entre las personas sordas<br>o con problemas de audición<br> y las personas oyentes.</h1>
+              </div>
+            </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="card">
+                                <div class="position-fixed bottom-0 end-0 p-3" style="max-width: 300px;">
+                                    <div class="card">
+                                      <div class="card-header">
+                                        <h3 id="tituloFormulario">Lenguaje de Señas Mexicano</h3>
+                                      </div>
+                                      <div class="card-body">
+                                        <div class="row mt-4">
+                                          <div class="col-12">
+                                            <input type="text" id="letraInput" placeholder="Ingresa una letra del abecedario" class="form-control">
+                                            <div id="imagenContenedor"></div>
+                                          </div>
+                                        </div> 
+                                      </div>
+                                    </div>
+                                  </div>                        
+                                </div>
+                </div>
+    </body>
+</html>
