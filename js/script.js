@@ -1,16 +1,30 @@
-const socket = io();
+const options = {
+    host: '9490def8d1484163895a70bd2a54355f.s1.eu.hivemq.cloud',
+    port: 8883,
+    protocol: 'mqtts',
+    username: 'miapi2',
+    password: 'cisco123T',
+    rejectUnauthorized: false
+};
 
-document.getElementById('letraInput').addEventListener('input', (e) => {
-    const letra = e.target.value;
-    if (letra.length === 1 && letra.match(/[a-zñ]/i)) { // Verifica si es una letra.
-        socket.emit('clienteEnviarLetra', { letra: letra.toLowerCase() });
-        // Reproduce el audio de la letra
-        const audio = new Audio(`/assets/audio/${letra.toLowerCase()}.mp3`);
-        audio.play();
-    }
+const client = mqtt.connect(options);
+
+client.on('connect', function () {
+    console.log('Connected');
+    client.subscribe('rasp/resultado');
 });
 
-socket.on('servidorEnviarImagen', (data) => {
-    document.getElementById('imagenContenedor').innerHTML = `<img src="${data.imagenUrl}" alt="Imagen" style="max-width: 100%;">`;
-    // Reproduce el audio de la letra aquí también si lo consideras necesario
+client.on('error', function (error) {
+    console.log('Error:', error);
 });
+
+client.on('message', function (topic, message) {
+    console.log('Received message:', topic, message.toString());
+    updateUI(message.toString());
+});
+
+function updateUI(msg) {
+    document.getElementById('letraInput').value = msg;
+    document.getElementById('letraImage').src = `/assets/${msg}.jpg`;
+    document.getElementById('letraAudio').src = `/assets/${msg}.mp3`;
+}

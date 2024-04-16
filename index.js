@@ -1,21 +1,85 @@
+const admin = require('firebase-admin');
 const express = require("express");
 const http = require("http");
-const {Server} = require("socket.io");
+const { Server } = require("socket.io");
 const path = require("path");
 const cors = require("cors");
-//const {conectarMongoDB}=require("./bd/conexion");
 const socket = require("./sockets/socket");
-//conectarMongoDB();
+const mqtt = require('mqtt');
+const fs = require('fs');
+
 const app = express();
 const httpServer = http.createServer(app);
 const io = new Server(httpServer);
 socket(io);
 
-
 app.use(cors());
-app.use("/",express.static(path.join(__dirname,'/')));
+app.use(express.static('public'));
+
+app.use("/", express.static(path.join(__dirname, '/')));
 
 app.use('/assets', express.static("./assets"));
+
+// Configuración de opciones para la conexión segura MQTT
+const options = {
+    host: '9490def8d1484163895a70bd2a54355f.s1.eu.hivemq.cloud',
+    port: 8883,
+    protocol: 'mqtts',
+    username: 'miapi2',
+    password: 'cisco123T',
+    // Configuración de TLS/SSL
+    // Asegúrate de tener los certificados correctos si tu servidor MQTT lo requiere
+    // ca: [fs.readFileSync('path/to/cacert.pem')]
+    rejectUnauthorized: false // Solo si confías en el servidor y no puedes verificarlo
+};
+
+// Inicializa el cliente MQTT con las opciones configuradas
+const client = mqtt.connect(options);
+
+// Configura los callbacks
+client.on('connect', function () {
+    console.log('Connected');
+
+    // Suscríbete al tópico 'rasp/resultado'
+    client.subscribe('rasp/resultado', function(err, granted) {
+        if (err) {
+            console.log('Subscription failed:', err);
+        } else {
+            console.log('Subscribed to topic:', granted.map(g => g.topic).join(", "));
+        }
+    });
+});
+
+client.on('error', function (error) {
+    console.log('Error:', error);
+});
+
+client.on('message', function (topic, message) {
+    // Se llama cada vez que se recibe un mensaje en los tópicos suscritos
+    console.log('Received message:', topic, message.toString());
+    io.emit('mqtt_message', message.toString());
+});
+
+// Asegurarse de manejar correctamente el cierre del cliente al terminar el proceso
+process.on('SIGINT', function() {
+    client.end(true, function() {
+        console.log('Client disconnected on process termination');
+        process.exit(0);
+    });
+});
+
+// Objeto para contar las apariciones de cada letra
+const letterCounts = {};
+
+client.on('message', function (topic, message) {
+    const letter = message.toString().trim(); // Asumiendo que cada mensaje es una letra
+    if (letter) {
+        letterCounts[letter] = (letterCounts[letter] || 0) + 1;
+    }
+    io.emit('data', { letter, count: letterCounts });
+});
+
+
 const port = 3000;
 httpServer.listen(port, ()=>{
     console.log("Servidor en http://localhost:"+port);
