@@ -1,0 +1,26 @@
+@import "~bootstrap/scss/bootstrap";
+
+// Define el mapa de colores personalizados
+$custom-theme-colors: (
+  "azul": #1e30f3,
+  "rosa": #e21e80,
+  "morado": #6610f2,
+);
+
+// Función para obtener colores del mapa
+@function custom-theme-color($color-name) {
+  @return map-get($custom-theme-colors, $color-name);
+}
+
+.gradient-linear {
+  background: linear-gradient(to right, color("azul"), color("rosa"));
+}
+
+// Clases para aplicar colores de fondo personalizados
+.bg-azul {
+  background-color: custom-color("azul") !important;
+}
+
+.bg-rosa {
+  background-color: custom-color("rosa") !important;
+}
