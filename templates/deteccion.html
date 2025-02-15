@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -9,7 +10,9 @@
     <!-- Custom Google font-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
     <!-- Core theme CSS (includes Bootstrap)-->
@@ -24,160 +27,265 @@
             align-items: start;
             padding: 20px;
         }
+
         .target-container {
             text-align: center;
             margin-left: 20px;
             position: relative;
         }
+
         #targetImage {
             max-width: 200px;
             max-height: 200px;
             border: 2px solid #ccc;
             border-radius: 8px;
         }
+
         #checkmark {
             position: absolute;
             top: 10px;
-            right: -80px; /* Adjusted to accommodate larger size */
-            width: 70px; /* Increased from 50px */
-            height: 70px; /* Increased from 50px */
+            right: -80px;
+            /* Adjusted to accommodate larger size */
+            width: 70px;
+            /* Increased from 50px */
+            height: 70px;
+            /* Increased from 50px */
             display: none;
         }
+
         #result {
             margin-top: 10px;
             font-size: 18px;
             font-weight: bold;
         }
+
         #targetLabel {
             font-size: 20px;
             margin-top: 10px;
             font-weight: bold;
         }
+
         .button-container {
             margin-top: 20px;
             text-align: center;
         }
-        #skipButton {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #e21e80;
-            color: white;
-            border: none;
-            border-radius: 5px;
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 30px;
+            border: 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10rem;
+            transition: all 0.02s;
+            font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.3s;
+            color: rgb(37, 37, 37);
+            z-index: 0;
+            box-shadow: 0 0px 7px -5px rgba(0, 0, 0, 0.5);
         }
+
+        .button:active {
+            transform: scale(0.97);
+        }
+
+        .hoverEffect {
+            position: absolute;
+            bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        .hoverEffect div {
+            background: rgb(222, 0, 75);
+            background: linear-gradient(90deg,
+                    rgba(222, 0, 75, 1) 0%,
+                    rgba(191, 70, 255, 1) 49%,
+                    rgba(0, 212, 255, 1) 100%);
+            border-radius: 40rem;
+            width: 10rem;
+            height: 10rem;
+            transition: 0.4s;
+            filter: blur(20px);
+            animation: effect infinite 3s linear;
+            opacity: 0.5;
+        }
+
+        .button:hover .hoverEffect div {
+            width: 8rem;
+            height: 8rem;
+        }
+
+        @keyframes effect {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
         #skipButton:hover {
-            background-color: #e21e80;
+            background: rgb(193, 228, 248);
+            color: rgb(33, 0, 85);
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
+
 <body class="d-flex flex-column h-100" background="/assets/hero.png">
     <main class="flex-shrink-0">
         <!-- Navigation-->
-<header class="py-5">
-    <div class="container">
-        <div>
-            <video id="video" width="640" height="480" autoplay></video>
-            <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
-            <div id="result"></div>
-        </div>
-        <div class="target-container">
-            <h2>Gesto Objetivo:</h2>
-            <img id="targetImage" src="/placeholder.svg" alt="Target Sign">
-            <p id="targetLabel"></p>
-            <img id="checkmark" src="/static/check_image/checkmark.png" alt="Correct!">
-            <div class="button-container">
-                <button id="skipButton">Siguiente Seña</button>
+        <header class="py-5">
+            <div class="container">
+                <div>
+                    <video id="video" width="640" height="480" autoplay></video>
+                    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+                    <div id="result"></div>
+                </div>
+                <div class="target-container">
+                    <h2>Gesto Objetivo:</h2>
+                    <img id="targetImage" src="/placeholder.svg" alt="Target Sign">
+                    <p id="targetLabel"></p>
+                    <img id="checkmark" src="/static/check_image/checkmark.png" alt="Correct!">
+                    <div class="button-container">
+                        <button class="button" id="skipButton">Siguiente Seña
+                            <div class="hoverEffect">
+                                <div></div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</header>
+        </header>
 </body>
-</html>
-    <script>
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        const resultDiv = document.getElementById('result');
-        const targetImage = document.getElementById('targetImage');
-        const targetLabel = document.getElementById('targetLabel');
-        const checkmark = document.getElementById('checkmark');
-        const skipButton = document.getElementById('skipButton');
 
-        // Solicitar acceso a la cámara
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                video.srcObject = stream;
-            })
-            .catch(err => console.error('Error accessing camera:', err));
-            function skipToNextSign() {
-            fetch('http://localhost:5000/gestos/skip', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
+</html>
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const resultDiv = document.getElementById('result');
+    const targetImage = document.getElementById('targetImage');
+    const targetLabel = document.getElementById('targetLabel');
+    const checkmark = document.getElementById('checkmark');
+    const skipButton = document.getElementById('skipButton');
+
+    // Solicitar acceso a la cámara
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(err => console.error('Error accessing camera:', err));
+    function skipToNextSign() {
+        fetch('http://localhost:5000/gestos/skip', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
                     targetImage.src = data.image_url;
                     targetLabel.textContent = data.target;
+
+                    //Obtener el audio
+                    const audioName = data.target;
+                    //ruta al audio
+                    const audioPath = `/assets/audio/${audioName}.mp3`;
+
+                    //crear un elemento audio
+                    const audioElement = new Audio(audioPath);
+
+                    //manejar errores
+                    audioElement.onerror = () => {
+                        console.error('Error al cargar el audio:', audioPath);
+                    };
+
+                    //reproducir el audio
+                    audioElement.play().catch(error => console.error('Error al reproducir audio:', error));
+
                 } else {
                     console.error('Error al cambiar la seña:', data.message);
                 }
             })
             .catch(error => console.error('Error:', error));
-        }
+    }
 
-            function loadNewImage() {
-    fetch('http://localhost:5000/gestos/get_current_image')  // Usar la URL completa
-        .then(response => response.json())
-        .then(data => {
-            targetImage.src = data.image_url;
-            targetLabel.textContent = data.target;
+    function loadNewImage() {
+        fetch('http://localhost:5000/gestos/get_current_image')  // Usar la URL completa
+            .then(response => response.json())
+            .then(data => {
+                targetImage.src = data.image_url;
+                targetLabel.textContent = data.target;
+
+                if (data.status === 'success') {
+                    targetImage.src = data.image_url;
+                    targetLabel.textContent = data.target;
+
+                    const audioName = data.target;
+                    const audioPath = `/assets/audio/${audioName}.mp3`;
+
+                    const audioElement = new Audio(audioPath);
+
+                    audioElement.onerror = () => {
+                        console.error('Error al cargar el audio:', audioPath);
+                    };
+
+                    audioElement.play().catch(error => console.error('Error al reproducir audio:', error));
+                }
+
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function captureFrame() {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = canvas.toDataURL('image/jpeg');
+
+        fetch('http://localhost:5000/gestos/predict', {  // Usar la URL completa
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ frame: imageData.split(',')[1] })
         })
-        .catch(error => console.error('Error:', error));
-}
+            .then(response => response.json())
+            .then(data => {
+                resultDiv.textContent = `Predicción: ${data.prediction}`;
+                if (data.is_correct) {
+                    const audio = new Audio('/static/check_image/check.mp3');
+                    audio.play();
 
-function captureFrame() {
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const imageData = canvas.toDataURL('image/jpeg');
-    
-    fetch('http://localhost:5000/gestos/predict', {  // Usar la URL completa
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ frame: imageData.split(',')[1] })
-    })
-    .then(response => response.json())
-    .then(data => {
-        resultDiv.textContent = `Predicción: ${data.prediction}`;
-        if (data.is_correct) {
-            const audio = new Audio('/static/check_image/check.mp3');
-            audio.play();
-            
-            checkmark.style.display = 'block';
-            setTimeout(() => {
-                checkmark.style.display = 'none';
-                loadNewImage();
-            }, 1000);
-        } else {
-            checkmark.style.display = 'none';
-        }
-    })
-    .catch(error => console.error('Error:', error));
-}
+                    checkmark.style.display = 'block';
+                    setTimeout(() => {
+                        checkmark.style.display = 'none';
+                        loadNewImage();
+                    }, 1000);
+                } else {
+                    checkmark.style.display = 'none';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
     // Agregar evento click al botón de saltar
     skipButton.addEventListener('click', skipToNextSign);
-      
-    // Cargar la primera imagen al iniciar
-        loadNewImage();
 
-        // Capturar frames cada segundo
-        setInterval(captureFrame, 1000);
-    </script>
+    // Cargar la primera imagen al iniciar
+    loadNewImage();
+
+    // Capturar frames cada segundo
+    setInterval(captureFrame, 1000);
+</script>
 </body>
+
 </html>

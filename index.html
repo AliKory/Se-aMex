@@ -1,135 +1,180 @@
 <!doctype html>
-  <html lang="en">
+<html lang="en">
 
-  <head>
-    <title>SeñaMex</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <link href="css/login.css" rel="stylesheet" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" ></script>
+<head>
+	<title>SeñaMex</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<link href="css/login.css" rel="stylesheet" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 	<link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-  </head>
+</head>
 
-  <body>
-      <!--LOGIN-->
-      <div class="form-container container">
-      <div class="form-container login-container">
-        <form name="login_form" id="login_form" method="post" action="#" enctype="multipart/form-data">
-          <h1>Ingresar</h1>
-          <input type="text" name="login_email" id="login_email" class="form-control" placeholder="Email" autofocus>
-          <input type="password" name="login_password" id="login_password" class="form-control"  placeholder="Contraseña">
-          <div class="content">
-          </div>
-          <button type="button" id="login" name="login" class="btn btn-success">Ingresar</button>
-        </form>
-      </div>
-
-      <!--Overlay Login-->
-      <div class="overlay-container">
-        <div class="overlay">
-          <div class="overlay-panel overlay-left">
-            <h1 class="title">Hello <br> friends</h1>
-            <p>if You have an account, login here and have fun</p>
-            <button class="ghost" id="login">Login
-              <i class="lni lni-arrow-left login"></i>
-            </button>
-          </div>
-
-          <!--Overlay Register-->
-          <div class="overlay-panel overlay-right">
-			<form name="registration_form" id="registration_form" method="post" action="#" enctype="multipart/form-data" style="position: relative; background-color: transparent;" > 
-            <h1 class="title">¿Eres <br> nuevo?</h1>
-            <p>Crea una cuenta y se parte de la comunidad SeñaMex</p>
-			<input type="text" name="email" id="email" class="form-control" placeholder="Email" autofocus>
-			<input type="password" name="password" id="password" class="form-control"  placeholder="Contraseña">
-			<button class="ghost" type="button" id="register" name="register" class="btn btn-success"><div class="pass-link">
-                <a>Registrarse</div></button>
-          </form>
+<body>
+	<!--LOGIN-->
+	<div class="form-container container">
+		<div class="form-container login-container">
+			<form name="login_form" id="login_form" method="post" action="#" enctype="multipart/form-data">
+				<h1>Ingresar</h1>
+				<input type="text" name="login_email" id="login_email" class="form-control" placeholder="Email"
+					autofocus>
+				<input type="password" name="login_password" id="login_password" class="form-control"
+					placeholder="Contraseña">
+				<div class="content">
+				</div>
+				<button type="button" id="login" name="login" class="btn btn-success">Ingresar</button>
+			</form>
 		</div>
-		
-        </div>
+
+		<!--Overlay Login-->
+		<div class="overlay-container">
+			<div class="overlay">
+				<div class="overlay-panel overlay-left">
+					<h1 class="title">Hello <br> friends</h1>
+					<p>if You have an account, login here and have fun</p>
+					<button class="ghost" id="login">Login
+						<i class="lni lni-arrow-left login"></i>
+					</button>
+				</div>
+
+				<!--Overlay Register-->
+				<div class="overlay-panel overlay-right">
+					<form name="registration_form" id="registration_form" method="post" action="#"
+						enctype="multipart/form-data" style="position: relative; background-color: transparent;">
+						<h1 class="title">¿Eres <br> nuevo?</h1>
+						<p>Crea una cuenta y se parte de la comunidad SeñaMex</p>
+						<input type="text" name="email" id="email" class="form-control" placeholder="Email" autofocus>
+						<input type="password" name="password" id="password" class="form-control"
+							placeholder="Contraseña">
+						<button class="ghost" type="button" id="register" name="register" class="btn btn-success">
+							<div class="pass-link">
+								<a>Registrarse
+							</div>
+						</button>
+					</form>
+				</div>
+
+			</div>
+		</div>
+
 	</div>
-	
-      </div>
-	
-    </div>
-  </body>
-  <script type="module">
-	// Import the functions you need from the SDKs you need
+
+	</div>
+</body>
+<script type="module">
 	import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
 	import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
 	import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
-	// TODO: Add SDKs for Firebase products that you want to use
-	// https://firebase.google.com/docs/web/setup#available-libraries
 
-	// Your web app's Firebase configuration
-	// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-	const firebaseConfig = {
-	  apiKey: "AIzaSyBknoUA41xzCGhz4Mk0YN0RmWp5RXqnNgw",
-  authDomain: "senamex-6d7dc.firebaseapp.com",
-  projectId: "senamex-6d7dc",
-  storageBucket: "senamex-6d7dc.appspot.com",
-  messagingSenderId: "490041619761",
-  appId: "1:490041619761:web:11a6fb6f80dc530b606c10",
-  measurementId: "G-BB892N8GHX"
+	const mensajesError = {
+		'auth/invalid-email': 'El correo electrónico no es válido.',
+		'auth/user-not-found': 'No se encontró ningún usuario con ese correo electrónico.',
+		'auth/wrong-password': 'La contraseña es incorrecta.',
+		'auth/weak-password': 'La contraseña es demasiado débil.',
+		'auth/email-already-in-use': 'El correo electrónico ya está en uso.',
+		'auth/credential-already-in-use': 'La credencial ya está en uso.',
+		'auth/too-many-requests': 'Demasiados intentos de inicio de sesión. Vuelva a intentarlo en un minuto.',
+		'auth/user-disabled': 'El usuario está deshabilitado.',
+		'auth/operation-not-allowed': 'No se permite esta operación.',
+		'auth/network-request-failed': 'Error de red. Verifique su conexión a Internet.',
+		'auth/invalid-login-credentials': 'Contraseña incorrecta'
 	};
 
-	// Initialize Firebase
+	const firebaseConfig = {
+		apiKey: "AIzaSyBknoUA41xzCGhz4Mk0YN0RmWp5RXqnNgw",
+		authDomain: "senamex-6d7dc.firebaseapp.com",
+		projectId: "senamex-6d7dc",
+		storageBucket: "senamex-6d7dc.appspot.com",
+		messagingSenderId: "490041619761",
+		appId: "1:490041619761:web:11a6fb6f80dc530b606c10",
+		measurementId: "G-BB892N8GHX"
+	};
+
 	const app = initializeApp(firebaseConfig);
 	const analytics = getAnalytics(app);
 	const auth = getAuth();
 	console.log(app);
 
-	
-
-	//----- New Registration code start	  
-	document.getElementById("register").addEventListener("click", function() {
-		var email =  document.getElementById("email").value;
+	document.getElementById("register").addEventListener("click", function () {
+		var email = document.getElementById("email").value;
 		var password = document.getElementById("password").value;
-		
-		//For new registration
-		createUserWithEmailAndPassword(auth, email, password)
-		.then((userCredential) => {
-		  // Signed in 
-		  const user = userCredential.user;
-		  console.log(user);
-		  alert("Registrado correctamente!!");
-		  // ...
-		})
-		.catch((error) => {
-		  const errorCode = error.code;
-		  const errorMessage = error.message;
-		  // ..
-		  console.log(errorMessage);
-		  alert(error);
-		});		  		  
-	});
-	//----- End
 
-	//----- Login code start	  
-	document.getElementById("login").addEventListener("click", function() {
-		var email =  document.getElementById("login_email").value;
+		createUserWithEmailAndPassword(auth, email, password)
+			.then((userCredential) => {
+				Swal.fire({
+					icon: 'success',
+					title: '¡Registrado correctamente!',
+					text: 'Usuario registrado con éxito.',
+					iconColor: '#007bff',
+					confirmButtonText: 'Aceptar',
+					confirmButtonColor: '#7b57ff',
+					background: '#f8f9fa',
+					color: '#343a40',
+					customClass: {
+						container: 'mi-alerta'
+					},
+					didOpen: () => {
+						document.querySelector('.swal2-x-mark').style.transform = 'translate(-50%, -50%)';
+					}
+				});
+			})
+			.catch((error) => {
+				console.log(error);
+				const errorCode = error.code;
+				const errorMessage = mensajesError[errorCode] || 'Ha ocurrido un error inesperado.';
+				Swal.fire({
+					icon: 'warning',
+					title: 'Lo sentimos',
+					text: errorMessage,
+					customClass: {
+						icon: 'mi-alerta'
+					},
+					didOpen: () => {
+						document.querySelector('.swal2-x-mark').style.transform = 'translate(-50%, -50%)';
+					}
+				});
+			});
+	}); // <-- AQUÍ SE CIERRA EL REGISTER
+
+	document.getElementById("login").addEventListener("click", function () {
+		var email = document.getElementById("login_email").value;
 		var password = document.getElementById("login_password").value;
 
 		signInWithEmailAndPassword(auth, email, password)
-		.then((userCredential) => {
-		  // Signed in 
-		  const user = userCredential.user;
-		  console.log(user);
-		  alert(user.email+" Ingresando!!!");
-		  window.location = 'inicio.html';
-		 
-		  // ...
-		})
-		.catch((error) => {
-		  const errorCode = error.code;
-		  const errorMessage = error.message;
-		  console.log(errorMessage);
-		  alert(errorMessage);
-		});		  		  
+			.then((userCredential) => {
+				const user = userCredential.user;
+				Swal.fire({
+					title: 'Bienvenido!',
+					text: `${user.email} Ingresando!!!`,
+					icon: 'success',
+					customClass: {
+						icon: 'mi-alerta'
+					},
+					showConfirmButton: false,
+					timer: 8000,
+					didOpen: () => {
+						document.querySelector('.swal2-x-mark').style.transform = 'translate(-50%, -50%)';
+					}
+				});
+				window.location = 'inicio.html';
+			})
+			.catch((error) => {
+				const errorCode = error.code;
+				const errorMessage = mensajesError[errorCode] || 'Ha ocurrido un error inesperado.';
+				Swal.fire({
+					icon: 'warning',
+					title: 'Lo sentimos',
+					text: errorMessage,
+					customClass: {
+						icon: 'mi-alerta'
+					},
+					didOpen: () => {
+						document.querySelector('.swal2-x-mark').style.transform = 'translate(-50%, -50%)';
+					}
+				});
+			});
 	});
-	//----- End
-
-  </script>
-  </html>
+</script>
