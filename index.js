@@ -100,7 +100,7 @@ client.on('message', function (topic, message) {
 });
 
 
-const port = 3001;
+const port = 3000;
 httpServer.listen(port, ()=>{
     console.log("Servidor en http://localhost:"+port);
 });
