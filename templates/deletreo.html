@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>SeñaMex</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Custom Google font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="http://localhost:3000/socket.io/socket.io.min.js" defer></script>
+    <script src="/js/scriptm.js" defer></script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .card {
+      box-shadow: 0 4px 8px #e21e80;
+      padding: 20px;
+      border-radius: 10px;
+      background: white;
+    }
+    #imagenContenedor {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-top: 20px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+    #imagenContenedor img {
+      width: 120px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body class="d-flex flex-column" background="/assets/hero.png">
+    <main class="flex-shrink-0">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+            <div class="container px-5">
+                <a class="navbar-brand" href="/inicio.html"><span class="fw-bolder text-primary">SeñaMex</span></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
+                        <li class="nav-item"><a class="nav-link" href="/inicio.html">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" href="alfabeto.html">Gestos del Alfabeto</a></li>
+                        <li class="nav-item"><a class="nav-link" href="deletreo.html">Deletreo</a></li>
+                        <!--<li class="nav-item"><a class="nav-link" href="grafico.html">Gráfico</a></li> -->
+                        <li class="nav-item"><a class="nav-link" href="proyecto.html">Sobre el proyecto</a></li>
+                        <li class="nav-item"><a class="nav-link" href="contacto.html">Equipo</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+  <div class="container py-5">
+    <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline"><center>Deletreo</h1></center>
+      <br>
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h3>Lenguaje de Señas Mexicano</h3>
+      </div>
+      <div class="card-body">
+        <input type="text" id="palabraInput" placeholder="Ingresa una palabra" class="form-control mb-3">
+        <button class="btn btn-primary" onclick="mostrarImagenes()">Mostrar Imágenes</button>
+        <div id="imagenContenedor"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function mostrarImagenes() {
+      const contenedor = document.getElementById('imagenContenedor');
+      const palabra = document.getElementById('palabraInput').value.trim().toLowerCase();
+      contenedor.innerHTML = '';
+      for (const letra of palabra) {
+        const img = document.createElement('img');
+        img.src = `/assets/${letra}.jpeg`; 
+        img.alt = `Seña de la letra ${letra}`;
+        img.onerror = () => { img.style.display = 'none'; };
+        contenedor.appendChild(img);
+      }
+    }
+  </script>
+</body>
+</html>

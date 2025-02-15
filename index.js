@@ -7,13 +7,33 @@ const cors = require("cors");
 const socket = require("./sockets/socket");
 const mqtt = require('mqtt');
 const fs = require('fs');
+const { PythonShell } = require('python-shell');
 
 const app = express();
 const httpServer = http.createServer(app);
 const io = new Server(httpServer);
 socket(io);
 
+// Configuración de CORS
 app.use(cors());
+
+// Configuración de rutas estáticas
+app.use(express.static('public'));
+app.use("/static", express.static(path.join(__dirname, 'static')));
+app.use("/", express.static(path.join(__dirname, '/')));
+app.use('/assets', express.static("./assets"));
+
+// Iniciar el servidor Flask
+let pyProc = new PythonShell('app.py');
+pyProc.on('message', function (message) {
+    console.log('Flask:', message);
+});
+
+// Ruta para la vista de gestos
+app.get('/gestos', (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates/deteccion.html'));
+});
+
 app.use(express.static('public'));
 
 app.use("/", express.static(path.join(__dirname, '/')));
@@ -80,7 +100,21 @@ client.on('message', function (topic, message) {
 });
 
 
-const port = 3000;
+const port = 3001;
 httpServer.listen(port, ()=>{
     console.log("Servidor en http://localhost:"+port);
+});
+
+// Cuando se cierre el servidor Node.js, también cerrar Flask
+process.on('SIGINT', function() {
+    pyProc.end(function (err,code,signal) {
+        if (err) throw err;
+        console.log('The exit code was: ' + code);
+        console.log('The exit signal was: ' + signal);
+        console.log('Flask process terminated');
+        client.end(true, function() {
+            console.log('MQTT client disconnected on process termination');
+            process.exit(0);
+        });
+    });
 });
