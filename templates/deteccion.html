@@ -156,6 +156,9 @@ function captureFrame() {
     .then(data => {
         resultDiv.textContent = `Predicción: ${data.prediction}`;
         if (data.is_correct) {
+            const audio = new Audio('/static/check_image/check.mp3');
+            audio.play();
+            
             checkmark.style.display = 'block';
             setTimeout(() => {
                 checkmark.style.display = 'none';
