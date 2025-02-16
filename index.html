@@ -139,6 +139,19 @@
 			});
 	}); // <-- AQUÍ SE CIERRA EL REGISTER
 
+	// Animación de entrada al cargar la página
+	window.addEventListener('DOMContentLoaded', () => {
+		const entranceAnimationDiv = document.createElement('div');
+		entranceAnimationDiv.classList.add('entrance-animation');
+		document.body.appendChild(entranceAnimationDiv);
+
+		// Eliminar la animación de entrada después de que termine
+		setTimeout(() => {
+			entranceAnimationDiv.remove();
+		}, 2500); // Duración de la animación de entrada
+	});
+
+	// Animación de salida al redirigir después del inicio de sesión
 	document.getElementById("login").addEventListener("click", function () {
 		var email = document.getElementById("login_email").value;
 		var password = document.getElementById("login_password").value;
@@ -146,20 +159,17 @@
 		signInWithEmailAndPassword(auth, email, password)
 			.then((userCredential) => {
 				const user = userCredential.user;
-				Swal.fire({
-					title: 'Bienvenido!',
-					text: `${user.email} Ingresando!!!`,
-					icon: 'success',
-					customClass: {
-						icon: 'mi-alerta'
-					},
-					showConfirmButton: false,
-					timer: 8000,
-					didOpen: () => {
-						document.querySelector('.swal2-x-mark').style.transform = 'translate(-50%, -50%)';
-					}
-				});
-				window.location = 'inicio.html';
+
+				// Animación de salida
+				const exitAnimationDiv = document.createElement('div');
+				exitAnimationDiv.classList.add('exit-animation');
+				document.body.appendChild(exitAnimationDiv);
+
+				// Redirigir después de que termine la animación de salida
+				setTimeout(() => {
+					//exitAnimationDiv.remove(); // Eliminar la animación de salida
+					window.location.href = 'inicio.html';
+				}, 2500); // Duración de la animación de salida
 			})
 			.catch((error) => {
 				const errorCode = error.code;
