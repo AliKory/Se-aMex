@@ -16,25 +16,51 @@
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
     <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="../css/styles.css" rel="stylesheet" />
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
     <title>Detección de Gestos</title>
     <style>
-        .container {
+        .main-content .container {
             display: flex;
-            justify-content: space-around;
-            align-items: start;
+            flex-wrap: wrap;
+            /* Permite que los elementos se reorganicen */
+            justify-content: center;
+            /* Centra los elementos horizontalmente */
+            align-items: center;
+            /* Centra los elementos verticalmente */
+            gap: 20px;
+            /* Espaciado entre elementos */
+            flex: 1;
+            padding: 20px;
+        }
+
+        #video,
+        #canvas {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 8px;
+            /* Bordes redondeados */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /* Sombra */
+            transform: scaleX(-1);
         }
 
         .target-container {
             text-align: center;
-            margin-left: 20px;
             position: relative;
+            max-width: 300px;
         }
 
         #targetImage {
-            max-width: 200px;
+            max-width: 100%;
             max-height: 200px;
+            margin: auto;
+            display: block;
             border: 2px solid #ccc;
             border-radius: 8px;
         }
@@ -55,6 +81,7 @@
             margin-top: 10px;
             font-size: 18px;
             font-weight: bold;
+            display: none;
         }
 
         #targetLabel {
@@ -135,54 +162,183 @@
             background: rgb(193, 228, 248);
             color: rgb(33, 0, 85);
         }
+
+        #targetLabel {
+            display: none;
+        }
+
+        /* Estilos para la sidebar */
+        .sidebar {
+            position: fixed;
+            top: 70px;
+            /* Altura de la navbar */
+            left: 0;
+            height: calc(100vh - 70px);
+            width: 250px;
+            /* Ancho inicial de la sidebar */
+            background-color: #f8f9fa;
+            /* Color de fondo claro */
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 10px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li a {
+            display: block;
+            padding: 10px 15px;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.2s;
+            border-radius: 8px;
+        }
+
+        .sidebar li a:hover {
+            background-color: #e9ecef;
+            /* Color de fondo al pasar el mouse */
+        }
+
+        .sidebar li a.active {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .sidebar li a.active:hover {
+            background-color: #007bff;
+        }
+
+        /* Estilos para el contenido principal */
+        .main-content {
+            margin-left: 250px;
+            /* Ancho de la sidebar */
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+            margin-top: 70px;
+            /* Ajuste para la navbar */
+        }
+
+        /* Estilos para el botón de la sidebar en pantallas pequeñas */
+        .sidebar-toggle {
+            display: none;
+            /* Oculto por defecto */
+            position: fixed;
+            top: 80px;
+            /* Ajustar según la altura de la navbar */
+            left: 20px;
+            z-index: 1050;
+            /* Por encima de la sidebar */
+            cursor: pointer;
+            font-size: 20px;
+            color: #333;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        /* Media query para pantallas pequeñas */
+        @media (max-width: 992px) {
+            .sidebar {
+                left: -250px;
+                /* Ocultar la sidebar */
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidebar-toggle {
+                display: block;
+                /* Mostrar el botón */
+            }
+
+            /* Mostrar la sidebar al hacer clic en el botón */
+            .wrapper.sidebar-visible .sidebar {
+                left: 0;
+            }
+
+            .wrapper.sidebar-visible .main-content {
+                margin-left: 250px;
+            }
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body class="d-flex flex-column h-100" background="/assets/hero.png">
-    <main class="flex-shrink-0">
-        <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
-            <div class="container px-5">
-                <a class="navbar-brand" href="/inicio.html"><span class="fw-bolder text-primary">SeñaMex</span></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
-                        <li class="nav-item"><a class="nav-link" href="/inicio.html">Inicio</a></li>
-                        <li class="nav-item"><a class="nav-link" href="alfabeto.html">Gestos del Alfabeto</a></li>
-                        <li class="nav-item"><a class="nav-link" href="deletreo.html">Deletreo</a></li>
-                        <!--<li class="nav-item"><a class="nav-link" href="grafico.html">Gráfico</a></li> -->
-                        <li class="nav-item"><a class="nav-link" href="proyecto.html">Sobre el proyecto</a></li>
-                        <li class="nav-item"><a class="nav-link" href="contacto.html">Equipo</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/index.html">Salir</a></li>
-                    </ul>
+<div class="wrapper">
+
+    <body class="d-flex flex-column" background="/assets/hero.png"></body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+        <div class="container px-5">
+            <a class="navbar-brand" href="/inicio.html">
+                <span class="fw-bolder text-primary">SeñaMex</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
+                    <li class="nav-item"><a class="nav-link" href="/inicio.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="alfabeto.html">Gestos del Alfabeto</a></li>
+                    <li class="nav-item"><a class="nav-link" href="deletreo.html">Deletreo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="proyecto.html">Sobre el proyecto</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contacto.html">Equipo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/index.html">Salir</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul>
+            <li><a href="#" class="active">Unidad 1</a></li>
+            <li><a href="#">Unidad 2</a></li>
+            <li><a href="#">Unidad 3</a></li>
+            <li><a href="#">Unidad 4</a></li>
+            <li><a href="#">Unidad 5</a></li>
+        </ul>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="main-content">
+        <div class="container">
+            <div>
+                <video id="video"  autoplay></video>
+                <canvas id="canvas" width="640" height="420" style="display:none;"></canvas>
+                <div id="result"></div>
+            </div>
+            <div class="target-container">
+                <h2>Gesto Objetivo:</h2>
+                <img id="targetImage" src="/placeholder.svg" alt="Target Sign">
+                <p id="targetLabel"></p>
+                <img id="checkmark" src="/static/check_image/checkmark.png" alt="Correct!">
+                <div class="button-container">
+                    <button class="button-siguiente" id="skipButton">Siguiente Seña
+                        <div class="hoverEffect">
+                            <div></div>
+                        </div>
+                    </button>
                 </div>
             </div>
-        </nav>
-        <header class="py-5">
-            <div class="container">
-                <div>
-                    <video id="video" width="620" height="440" autoplay></video>
-                    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
-                    <div id="result"></div>
-                </div>
-                <div class="target-container">
-                    <h2>Gesto Objetivo:</h2>
-                    <img id="targetImage" src="/placeholder.svg" alt="Target Sign">
-                    <p id="targetLabel"></p>
-                    <img id="checkmark" src="/static/check_image/checkmark.png" alt="Correct!">
-                    <div class="button-container">
-                        <button class="button-siguiente" id="skipButton">Siguiente Seña
-                            <div class="hoverEffect">
-                                <div></div>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </header>
+        </div>
+    </div>
+</div>
+</header>
 </body>
 
 </html>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script>
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
@@ -299,6 +455,14 @@
 
     // Capturar frames cada segundo
     setInterval(captureFrame, 1000);
+
+    lucide.createIcons();
+
+    $(document).ready(function () {
+        $('.navbar-toggler').click(function () {
+            $('.sidebar').toggleClass('sidebar-visible');
+        });
+    });
 </script>
 </body>
 

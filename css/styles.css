@@ -11,10 +11,10 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 :root {
-  --bs-blue: #1e30f3;
-  --bs-indigo: #6610f2;
-  --bs-purple: #6f42c1;
-  --bs-pink: #e21e80;
+  --bs-blue: #c4d4f1;
+  --bs-indigo: #6d418b;
+  --bs-purple: #c7c3f2;
+  --bs-pink: #d05ada;
   --bs-red: #dc3545;
   --bs-orange: #fd7e14;
   --bs-yellow: #ffc107;
@@ -35,14 +35,14 @@
   --bs-gray-800: #343a40;
   --bs-gray-900: #212529;
   --bs-primary: #1e30f3;
-  --bs-secondary: #e21e80;
+  --bs-secondary: #d05ada;
   --bs-success: #198754;
   --bs-info: #0dcaf0;
   --bs-warning: #ffc107;
   --bs-danger: #dc3545;
   --bs-light: #f8f9fa;
   --bs-dark: #212529;
-  --bs-primary-rgb: 30, 48, 243;
+  --bs-primary-rgb: #9069fb;
   --bs-secondary-rgb: 226, 30, 128;
   --bs-success-rgb: 25, 135, 84;
   --bs-info-rgb: 13, 202, 240;
@@ -75,7 +75,7 @@
   --bs-border-radius-pill: 50rem;
   --bs-link-color: #1e30f3;
   --bs-link-hover-color: #1826c2;
-  --bs-code-color: #e21e80;
+  --bs-code-color: #d05ada;
   --bs-highlight-bg: #fff3cd;
 }
 
@@ -142,7 +142,7 @@ body {
   color: #fff;
 }
 .centered-content h2 {
-    background: -webkit-linear-gradient(315deg, #1e30f3 0%, #e21e80 100%);
+    background: -webkit-linear-gradient(315deg, #1e30f3 0%, #d05ada 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -2944,37 +2944,54 @@ textarea.form-control-lg {
 }
 
 .btn-primary {
-  --bs-btn-color: #fff;
-  --bs-btn-bg: #1e30f3;
-  --bs-btn-border-color: #1e30f3;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #1a29cf;
-  --bs-btn-hover-border-color: #1826c2;
-  --bs-btn-focus-shadow-rgb: 64, 79, 245;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #1826c2;
-  --bs-btn-active-border-color: #1724b6;
-  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #1e30f3;
-  --bs-btn-disabled-border-color: #1e30f3;
+  position: relative;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  color: white;
+  flex-direction: column;
+  justify-content: center;
+  border: none;
+  padding: 12px;
+  gap: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-primary::after{
+  content: "";
+  z-index: -1;
+  position: absolute;
+  inset: 0;
+  background: #df9bd8;
+  transform: translate3d(0, 0, 0) scale(0.95);
+  filter: blur(20px);
+}
+
+.btn-primary:active {
+  background: #df9bd8; /* Color morado del degradado */
+  color: white; /* Mantener el color del texto en blanco */
+}
+.btn-primary:hover {
+  background-color: #000; /* Fondo negro */
+  color: white; /* Mantener el color del texto en blanco */
 }
 
 .btn-secondary {
   --bs-btn-color: #000;
-  --bs-btn-bg: #e21e80;
-  --bs-btn-border-color: #e21e80;
+  --bs-btn-bg: #d05ada;
+  --bs-btn-border-color: #d05ada;
   --bs-btn-hover-color: #000;
-  --bs-btn-hover-bg: #e64093;
-  --bs-btn-hover-border-color: #e5358d;
+  --bs-btn-hover-bg: #d05ada;
+  --bs-btn-hover-border-color: #d05ada;
   --bs-btn-focus-shadow-rgb: 192, 26, 109;
   --bs-btn-active-color: #000;
-  --bs-btn-active-bg: #e84b99;
-  --bs-btn-active-border-color: #e5358d;
+  --bs-btn-active-bg: #d05ada;
+  --bs-btn-active-border-color: #d05ada;
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: #000;
-  --bs-btn-disabled-bg: #e21e80;
-  --bs-btn-disabled-border-color: #e21e80;
+  --bs-btn-disabled-bg: #d05ada;
+  --bs-btn-disabled-border-color: #d05ada;
 }
 
 .btn-success {
@@ -3064,19 +3081,19 @@ textarea.form-control-lg {
 
 .btn-dark {
   --bs-btn-color: #fff;
-  --bs-btn-bg: #ca208e;
-  --bs-btn-border-color: #ca208e;
+  --bs-btn-bg: #d05ada;
+  --bs-btn-border-color: #d05ada;
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #424649;
   --bs-btn-hover-border-color: #373b3e;
-  --bs-btn-focus-shadow-rgb: 202, 32, 142; /* Usamos el RGB del color #ca208e */
+  --bs-btn-focus-shadow-rgb: 202, 32, 142; /* Usamos el RGB del color #d05ada */
   --bs-btn-active-color: #fff;
   --bs-btn-active-bg: #4d5154;
   --bs-btn-active-border-color: #373b3e;
-  --bs-btn-active-shadow: #ca208e;
+  --bs-btn-active-shadow: #d05ada;
   --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #ca208e;
-  --bs-btn-disabled-border-color: #ca208e;
+  --bs-btn-disabled-bg: #d05ada;
+  --bs-btn-disabled-border-color: #d05ada;
   text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff; /* Simula un contorno blanco */
 }
 
@@ -3098,19 +3115,19 @@ textarea.form-control-lg {
 }
 
 .btn-outline-secondary {
-  --bs-btn-color: #e21e80;
-  --bs-btn-border-color: #e21e80;
+  --bs-btn-color: #d05ada;
+  --bs-btn-border-color: #d05ada;
   --bs-btn-hover-color: #000;
-  --bs-btn-hover-bg: #e21e80;
-  --bs-btn-hover-border-color: #e21e80;
+  --bs-btn-hover-bg: #d05ada;
+  --bs-btn-hover-border-color: #d05ada;
   --bs-btn-focus-shadow-rgb: 226, 30, 128;
   --bs-btn-active-color: #000;
-  --bs-btn-active-bg: #e21e80;
-  --bs-btn-active-border-color: #e21e80;
+  --bs-btn-active-bg: #d05ada;
+  --bs-btn-active-border-color: #d05ada;
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #e21e80;
+  --bs-btn-disabled-color: #d05ada;
   --bs-btn-disabled-bg: transparent;
-  --bs-btn-disabled-border-color: #e21e80;
+  --bs-btn-disabled-border-color: #d05ada;
   --bs-gradient: none;
 }
 
@@ -3200,19 +3217,19 @@ textarea.form-control-lg {
 }
 
 .btn-outline-dark {
-  --bs-btn-color: #212529;
-  --bs-btn-border-color: #212529;
+  --bs-btn-color: #df9bd8;
+  --bs-btn-border-color: #df9bd8;
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #212529;
   --bs-btn-hover-border-color: #212529;
   --bs-btn-focus-shadow-rgb: 33, 37, 41;
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #212529;
+  --bs-btn-active-bg: #df9bd8;
   --bs-btn-active-border-color: #212529;
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: #212529;
   --bs-btn-disabled-bg: transparent;
-  --bs-btn-disabled-border-color: #212529;
+  --bs-btn-disabled-border-color: #df9bd8;
   --bs-gradient: none;
 }
 
@@ -3254,21 +3271,21 @@ textarea.form-control-lg {
 
 .btn.btn-outline-dark.btn-lg.px-5.py-3.fs-6.fw-bolder {
   color: #fff; /* Cambia el color del texto a rosa */
-  border-color: #ca208e; /* Cambia el color del borde a rosa */
-  background-color: #ca208e; /* Mantiene el fondo transparente */
+  border-color: #df9bd8; /* Cambia el color del borde a rosa */
+  background-color: #df9bd8; /* Mantiene el fondo transparente */
 }
 
 .btn.btn-outline-dark.btn-lg.px-5.py-3.fs-6.fw-bolder:hover,
 .btn.btn-outline-dark.btn-lg.px-5.py-3.fs-6.fw-bolder:focus {
   color: #fff; /* Cambia el color del texto al pasar el mouse o enfocar a blanco para mayor contraste */
-  background-color: #b72082; /* Cambia el fondo a rosa al pasar el mouse o enfocar */
-  border-color: #b72082; /* Asegura que el color del borde se mantenga en rosa al pasar el mouse o enfocar */
+  background-color: #df9bd8; /* Cambia el fondo a rosa al pasar el mouse o enfocar */
+  border-color: #e59fc9; /* Asegura que el color del borde se mantenga en rosa al pasar el mouse o enfocar */
 }
 
 .btn.btn-outline-dark.btn-lg.px-5.py-3.fs-6.fw-bolder:active {
   color: #fff; /* Color del texto cuando está activo */
-  background-color: #b81e72; /* Fondo más oscuro cuando el botón está activo (puedes ajustar este color) */
-  border-color: #b81e72; /* Color del borde cuando el botón está activo (puedes ajustar este color) */
+  background-color: #d05ada; /* Fondo más oscuro cuando el botón está activo (puedes ajustar este color) */
+  border-color: #d05ada; /* Color del borde cuando el botón está activo (puedes ajustar este color) */
 }
 
 .btn.btn-outline-dark.btn-lg.px-5.py-3.fs-6.fw-bolder:disabled {
@@ -6833,7 +6850,7 @@ textarea.form-control-lg {
 }
 
 .link-secondary {
-  color: #e21e80 !important;
+  color: #d05ada !important;
 }
 .link-secondary:hover, .link-secondary:focus {
   color: #e84b99 !important;
@@ -8371,7 +8388,7 @@ textarea.form-control-lg {
 
 .text-muted {
   --bs-text-opacity: 1;
-  color: #899197 !important;
+  color: #3c4044 !important;
 }
 
 .text-black-50 {
@@ -11687,11 +11704,14 @@ html {
 
 .bg-gradient-primary-to-secondary {
   background: #1e30f3;
-  background: linear-gradient(135deg, #1e30f3 0%, #e21e80 100%);
+  background: linear-gradient(to right, 
+  rgba(0, 123, 255, 1) 0%, 
+  rgba(191, 70, 255, 1) 49%, 
+  rgba(0, 212, 255, 1) 100%);
 }
 
 .text-gradient {
-  background: -webkit-linear-gradient(315deg, #1e30f3 0%, #e21e80 100%), rgba(255, 255, 255, 0.75);
+  background: -webkit-linear-gradient(315deg, #1e30f3 0%, #d05ada 100%), rgba(255, 255, 255, 0.75);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-color: rgba(255, 255, 255, 0.90); /* Fondo blanco más visible */

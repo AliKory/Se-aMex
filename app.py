@@ -130,12 +130,10 @@ def predict():
                 current_image, current_target = new_random_image()
 
             return jsonify({
-                'prediction': predicted_character,
                 'is_correct': is_correct,
                 'target': current_target
             })
 
-        return jsonify({'prediction': 'No se detectó ninguna mano'})
 
     except Exception as e:
         print("Error al procesar el frame:", e)
