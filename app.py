@@ -50,7 +50,7 @@ def index():
 @app.route('/gestos/get_current_image')
 def get_current_image():
     try:
-        image_url = url_for('static', filename=f'sign_images/{current_image}', _external=True)
+        image_url = url_for('static', filename=f'sign_images/alfabeto/{current_image}', _external=True)
         checkmark_url = url_for('static', filename='check_image/checkmark.png', _external=True)
         return jsonify({
             'image_url': image_url,
@@ -71,7 +71,7 @@ def skip_image():
         return jsonify({
             'status': 'success',
             'message': 'Seña cambiada exitosamente',
-            'image_url': url_for('static', filename=f'sign_images/{current_image}', _external=True),
+            'image_url': url_for('static', filename=f'sign_images/alfabeto/{current_image}', _external=True),
             'target': current_target
         })
     except Exception as e:
