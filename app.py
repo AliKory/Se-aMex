@@ -12,14 +12,13 @@ app = Flask(__name__, static_url_path='/static', static_folder='static')
 CORS(app)
 
 # Cargar el modelo
-model_dict = pickle.load(open('./model.p', 'rb'))
+model_dict = pickle.load(open('./model.p', 'rb'))  
 model = model_dict['model']
 labels_dict = {
-    0: ' ', 1: ' ', 2: 'Saludos', 3: 'Me', 4: 'Llamo', 5: 'a', 6: 'b', 7: 'c', 8: 'd',
-    9: 'e', 10: 'f', 11: 'g', 12: 'h', 13: 'i', 14: 'j', 15: 'k', 16: 'l', 17: 'm', 18: 'n',
-    19: 'ene', 20: 'o', 21: 'p', 22: 'q', 23: 'r', 24: 's', 25: 't', 26: 'u', 27: 'v', 28: 'w',
-    29: 'y', 30: 'Yo', 31: 'Tu', 32: 'Nosotros', 33: 'Ustedes', 34: 'Ella', 35: 'Hola',36:'Gracias',
-    37: 'Porfavor', 38: 'Sonreir'
+    0: ' ', 1: ' ', 2: 'a', 3: 'b', 4: 'c', 5: 'd', 6: 'e', 7: 'f', 8: 'g',
+    9: 'h', 10: 'i', 11: 'j', 12: 'k', 13: 'l', 14: 'll', 15: 'm', 16: 'n', 17: 'ñ', 18: 'o',
+    19: 'p', 20: 'q', 21: 'r', 22: 'rr', 23: 's', 24: 't', 25: 'u', 26: 'v', 27: 'w', 28: 'x',
+    29: 'y', 30: 'z'
 }
 
 # Configuración de MediaPipe
@@ -27,10 +26,39 @@ mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(static_image_mode=True, min_detection_confidence=0.3)
 
 # Lista de imágenes de signos
-sign_images = [None,None,'Saludos.jpg','Me.jpg','Llamo.jpg','a.jpeg', 'b.jpeg', 'c.jpeg', 'd.jpeg', 'e.jpeg', 'f.jpeg', 'g.jpeg', 'h.jpeg', 
-               'i.jpeg', 'j.jpeg', 'k.jpeg', 'l.jpeg', 'm.jpeg', 'n.jpeg', 'ene.jpeg', 'o.jpeg', 
-               'p.jpeg', 'q.jpeg', 'r.jpeg', 's.jpeg', 't.jpeg', 'u.jpeg', 'v.jpeg', 'w.jpeg', 
-               'y.jpeg','Yo.jpg','Tu.jpg','Nosotros.jpg',None,None,None,'Gracias.jpg','Porfavor.jpg','Sonreir.jpg']
+sign_images = [
+    None,  # Índice 0
+    None,  # Índice 1
+    'a.jpeg',  # Índice 2
+    'b.jpeg',  # Índice 3
+    'c.jpeg',  # Índice 4
+    'd.jpeg',  # Índice 5
+    'e.jpeg',  # Índice 6
+    'f.jpeg',  # Índice 7
+    'g.jpeg',  # Índice 8
+    'h.jpeg',  # Índice 9
+    'i.jpeg',  # Índice 10
+    'j.jpeg',  # Índice 11
+    'k.jpeg',  # Índice 12
+    'l.jpeg',  # Índice 13
+    'll.jpeg',  # Índice 14 (si tienes una imagen para "ll")
+    'm.jpeg',  # Índice 15
+    'n.jpeg',  # Índice 16
+    'ñ.jpeg',  # Índice 17 (si tienes una imagen para "ñ")
+    'o.jpeg',  # Índice 18
+    'p.jpeg',  # Índice 19
+    'q.jpeg',  # Índice 20
+    'r.jpeg',  # Índice 21
+    'rr.jpeg',  # Índice 22 (si tienes una imagen para "rr")
+    's.jpeg',  # Índice 23
+    't.jpeg',  # Índice 24
+    'u.jpeg',  # Índice 25
+    'v.jpeg',  # Índice 26
+    'w.jpeg',  # Índice 27
+    'x.jpeg',  # Índice 28
+    'y.jpeg',  # Índice 29
+    'z.jpeg'   # Índice 30
+]
 
 # Filtrar solo gestos con imágenes disponibles
 valid_indices = [i for i in range(len(sign_images)) if sign_images[i] is not None]
@@ -50,7 +78,8 @@ def index():
 @app.route('/gestos/get_current_image')
 def get_current_image():
     try:
-        image_url = url_for('static', filename=f'sign_images/alfabeto/{current_image}', _external=True)
+        # Actualizar la ruta para apuntar a la carpeta "alphabet"
+        image_url = url_for('static', filename=f'sign_images/alphabet/{current_image}', _external=True)
         checkmark_url = url_for('static', filename='check_image/checkmark.png', _external=True)
         return jsonify({
             'image_url': image_url,
@@ -71,13 +100,13 @@ def skip_image():
         return jsonify({
             'status': 'success',
             'message': 'Seña cambiada exitosamente',
-            'image_url': url_for('static', filename=f'sign_images/alfabeto/{current_image}', _external=True),
+            'image_url': url_for('static', filename=f'sign_images/alphabet/{current_image}', _external=True),
             'target': current_target
         })
     except Exception as e:
         print(f"Error al cambiar la seña: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)})
-    
+
 @app.route('/gestos/predict', methods=['POST'])
 def predict():
     global current_image, current_target
@@ -125,16 +154,17 @@ def predict():
             predicted_character = labels_dict.get(predicted_index, "Desconocido")
 
             is_correct = predicted_character.strip().lower() == current_target.strip().lower()
-            
+
             if is_correct:
                 current_image, current_target = new_random_image()
 
+            print("Predicción generada:", predicted_character)
             return jsonify({
+                'prediction': predicted_character,
                 'is_correct': is_correct,
                 'target': current_target
             })
-
-
+        return jsonify({'prediction': 'No se detectó ninguna mano'})
     except Exception as e:
         print("Error al procesar el frame:", e)
         return jsonify({'prediction': f'Error al procesar el frame: {str(e)}'})
