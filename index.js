@@ -34,6 +34,10 @@ app.get('/gestos', (req, res) => {
     res.sendFile(path.join(__dirname, 'templates/deteccion.html'));
 });
 
+app.get('/gestos/saludos', (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates/deteccionsaludos.html'));
+});
+
 app.use(express.static('public'));
 
 app.use("/", express.static(path.join(__dirname, '/')));

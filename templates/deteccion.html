@@ -295,7 +295,7 @@
     <div class="sidebar">
         <ul>
             <li><a href="#" class="active">Abecedario</a></li>
-            <li><a href="#">Saludos</a></li>
+            <li><a href="/gestos/saludos">Saludos</a></li>
             <li><a href="#">Unidad 3</a></li>
             <li><a href="#">Unidad 4</a></li>
             <li><a href="#">Unidad 5</a></li>
@@ -306,7 +306,7 @@
     <div class="main-content">
         <div class="container">
             <div>
-                <video id="video"  autoplay></video>
+                <video id="video" autoplay></video>
                 <canvas id="canvas" width="640" height="420" style="display:none;"></canvas>
                 <div id="result"></div>
             </div>
@@ -351,6 +351,8 @@
             video.srcObject = stream;
         })
         .catch(err => console.error('Error accessing camera:', err));
+
+
     function skipToNextSign() {
         fetch('http://localhost:5000/gestos/skip', {
             method: 'POST',
@@ -364,20 +366,20 @@
                     targetImage.src = data.image_url;
                     targetLabel.textContent = data.target;
 
-                    //Obtener el audio
+                    // Obtener el audio
                     const audioName = data.target;
-                    //ruta al audio
+                    // Ruta al audio
                     const audioPath = `/assets/audio/${audioName}.mp3`;
 
-                    //crear un elemento audio
+                    // Crear un elemento audio
                     const audioElement = new Audio(audioPath);
 
-                    //manejar errores
+                    // Manejar errores
                     audioElement.onerror = () => {
                         console.error('Error al cargar el audio:', audioPath);
                     };
 
-                    //reproducir el audio
+                    // Reproducir el audio
                     audioElement.play().catch(error => console.error('Error al reproducir audio:', error));
 
                 } else {
@@ -414,11 +416,16 @@
             .catch(error => console.error('Error:', error));
     }
 
+    let isProcessing = false; // Variable para evitar llamadas duplicadas
+
     function captureFrame() {
+        if (isProcessing) return; // Evita múltiples capturas simultáneas
+        isProcessing = true;
+
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageData = canvas.toDataURL('image/jpeg');
 
-        fetch('http://localhost:5000/gestos/predict', {  // Usar la URL completa
+        fetch('http://localhost:5000/gestos/predict', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -428,28 +435,73 @@
             .then(response => response.json())
             .then(data => {
                 resultDiv.textContent = `Predicción: ${data.prediction}`;
+
                 if (data.is_correct) {
+                    // Reproducir sonido de éxito solo una vez
                     const audio = new Audio('/static/check_image/check.mp3');
                     audio.play();
 
                     checkmark.style.display = 'block';
+
                     setTimeout(() => {
                         checkmark.style.display = 'none';
-                        loadNewImage();
-                    }, 1000);
+                        skipToNextSign(); // Cambia solo si es correcto
+                    }, 1500); // Espera antes de cambiar
                 } else {
                     checkmark.style.display = 'none';
                 }
             })
+            .catch(error => console.error('Error en la predicción:', error))
+            .finally(() => {
+                setTimeout(() => {
+                    isProcessing = false; // Permite la siguiente captura después de un tiempo
+                }, 2000);
+            });
+    }
+
+    let lastAudio = null; // Para evitar reproducir el audio dos veces
+
+    function skipToNextSign() {
+        fetch('http://localhost:5000/gestos/skip', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    targetImage.src = data.image_url;
+                    targetLabel.textContent = data.target;
+
+                    // Reproducir audio solo si es diferente al anterior
+                    const audioName = data.target;
+                    const audioPath = `/assets/audio/${audioName}.mp3`;
+
+                    if (lastAudio !== audioPath) {
+                        lastAudio = audioPath;
+                        const audioElement = new Audio(audioPath);
+
+                        audioElement.onerror = () => {
+                            console.error('Error al cargar el audio:', audioPath);
+                        };
+
+                        audioElement.play().catch(error => console.error('Error al reproducir audio:', error));
+                    }
+                } else {
+                    console.error('Error al cambiar la seña:', data.message);
+                }
+            })
             .catch(error => console.error('Error:', error));
     }
+
     // Agregar evento click al botón de saltar
     skipButton.addEventListener('click', skipToNextSign);
 
     // Cargar la primera imagen al iniciar
     loadNewImage();
 
-    // Capturar frames cada segundo
+    // Capturar frames cada 1.5 segundos para evitar cambios bruscos
     setInterval(captureFrame, 1000);
 
     lucide.createIcons();
@@ -459,6 +511,10 @@
             $('.sidebar').toggleClass('sidebar-visible');
         });
     });
+
+    window.onload = function () {
+    document.getElementById("targetLabel").innerText = "";  // Si se muestra en un div
+};
 </script>
 </body>
 
