@@ -29,13 +29,7 @@ hands = mp_hands.Hands(static_image_mode=True, min_detection_confidence=0.3)
 sign_images = ['a.jpeg','b.jpeg','c.jpeg','d.jpeg','e.jpeg','f.jpeg','g.jpeg','h.jpeg','i.jpeg','j.jpeg','k.jpeg','l.jpeg','ll.jpeg','m.jpeg','n.jpeg','ñ.jpeg','o.jpeg','p.jpeg','q.jpeg','r.jpeg','rr.jpeg','s.jpeg','t.jpeg','u.jpeg','v.jpeg','w.jpeg','x.jpeg','y.jpeg','z.jpeg']
 sign_videos = ['hola.mp4', 'buenos_dias.mp4', 'buenas_tardes.mp4', 'buenas_noches.mp4', 'comoestas.mp4']
 
-videos = [
-    {"video_url": "/static/videos/hola.mp4", "target": "Hola"},
-    {"video_url": "/static/videos/buenos_dias.mp4", "target": "Buenos días"},
-    {"video_url": "/static/videos/buenas_tardes.mp4", "target": "Buenas tardes"},
-    {"video_url": "/static/videos/buenas_noches.mp4", "target": "Buenas noches"},
-    {"video_url": "/static/videos/comoestas.mp4", "target": "¿Como estas?"},
-]
+
 # Obtener índices válidos
 valid_indices = list(range(len(sign_images)))
 valids_indices = list(range(len(sign_videos)))
@@ -47,7 +41,7 @@ def new_random_image():
 # Variables globales de estado
 current_image, current_target = new_random_image()
 
-current_index = 0
+current_video_index = 0
 
 @app.route('/gestos')
 def gestos():
@@ -83,14 +77,15 @@ def new_ordered_video():
         current_video_index = 0
         return sign_videos[current_video_index], labels_dicts[current_video_index]
     
-@app.route('/gestos/saludos/get_current_video', methods=['GET'])
-def get_video():
-    global current_index
-    return jsonify({
-        "status": "success",
-        "video_url": videos[current_index]["video_url"],
-        "target": videos[current_index]["target"]
-    })
+@app.route('/gestos/saludos/get_current_video')
+def get_current_video():
+    global current_video, current_target
+    current_video, current_target = new_ordered_video()  # Obtener el siguiente video en orden
+    try:
+        video_url = url_for('static', filename=f'videos/greetings/{current_video}', _external=True)
+        return jsonify({'video_url': video_url, 'target': current_target, 'status': 'success', 'is_last': current_video_index >= len(sign_videos)})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)})
     
 @app.route('/gestos/skip', methods=['POST'])
 def skip_image():
@@ -100,9 +95,9 @@ def skip_image():
 
 @app.route('/gestos/saludos/skip', methods=['POST'])
 def skip_video():
-    global current_index
-    current_index = (current_index + 1) % len(videos)  # Avanzar en orden circular
-    return jsonify({"status": "success"})
+    global current_video, current_target
+    current_video, current_target = new_ordered_video()  # Obtener el siguiente video en orden
+    return jsonify({'status': 'success', 'video_url': url_for('static', filename=f'videos/greetings/{current_video}', _external=True), 'target': current_target})
 
 @app.route('/gestos/predict', methods=['POST'])
 def predict():

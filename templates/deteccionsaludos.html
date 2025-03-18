@@ -382,16 +382,16 @@
     }
 
     function loadNewVideo() {
-    fetch('http://localhost:5000/gestos/saludos/get_current_video')
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                const targetVideo = document.getElementById('targetVideo');
-                targetVideo.src = data.video_url;
-                targetLabel.textContent = data.target;
+        fetch('http://localhost:5000/gestos/saludos/get_current_video')  // Endpoint para videos
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const targetVideo = document.getElementById('targetVideo');
+                    targetVideo.src = data.video_url;
+                    targetLabel.textContent = data.target;
 
-                // Reproducir el video automáticamente
-                targetVideo.play()
+                    // Reproducir el video automáticamente
+                    targetVideo.play();
 
                     // Obtener el audio
                     const audioName = data.target;
