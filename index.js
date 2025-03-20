@@ -38,6 +38,15 @@ app.get('/gestos/saludos', (req, res) => {
     res.sendFile(path.join(__dirname, 'templates/deteccionsaludos.html'));
 });
 
+app.get('/gestos/emociones', (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates/deteccionemociones.html'));
+});
+
+app.get('/gestos/presentacion', (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates/deteccionpresentacion.html'));
+});
+
+
 app.use(express.static('public'));
 
 app.use("/", express.static(path.join(__dirname, '/')));
