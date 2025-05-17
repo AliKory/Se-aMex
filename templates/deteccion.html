@@ -54,7 +54,7 @@
         .target-container {
             text-align: center;
             position: relative;
-            max-width: 300px;
+            max-width: 500px;
         }
 
         #targetImage {
@@ -298,6 +298,9 @@
             <li><a href="/gestos/saludos">Saludos</a></li>
             <li><a href="/gestos/emociones">Emociones</a></li>
             <li><a href="/gestos/presentacion">Presentación</a></li>
+            <li><a href="/gestos/negacion">Negación y Existencia</a></li>
+            <li><a href="/gestos/ubicacion">Ubicación</a></li>
+            <li><a href="/gestos/problemas">Problemas y Situaciones</a></li>
         </ul>
     </div>
 
@@ -368,7 +371,7 @@
                     // Obtener el audio
                     const audioName = data.target;
                     // Ruta al audio
-                    const audioPath = `/assets/audio/${audioName}.mp3`;
+                    const audioPath = `/assets/audio/alphabet/${audioName}.mp3`;
 
                     // Crear un elemento audio
                     const audioElement = new Audio(audioPath);
@@ -400,7 +403,7 @@
                     targetLabel.textContent = data.target;
 
                     const audioName = data.target;
-                    const audioPath = `/assets/audio/${audioName}.mp3`;
+                    const audioPath = `/assets/audio/alphabet/${audioName}.mp3`;
 
                     const audioElement = new Audio(audioPath);
 
@@ -475,7 +478,7 @@
 
                     // Reproducir audio solo si es diferente al anterior
                     const audioName = data.target;
-                    const audioPath = `/assets/audio/${audioName}.mp3`;
+                    const audioPath = `/assets/audio/alphabet/${audioName}.mp3`;
 
                     if (lastAudio !== audioPath) {
                         lastAudio = audioPath;

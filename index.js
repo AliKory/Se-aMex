@@ -46,6 +46,21 @@ app.get('/gestos/presentacion', (req, res) => {
     res.sendFile(path.join(__dirname, 'templates/deteccionpresentacion.html'));
 });
 
+app.get('/gestos/negacion', (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates/deteccionnegacion.html'));
+});
+
+app.get('/gestos/ubicacion', (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates/deteccionubicacion.html'));
+});
+
+app.get('/gestos/problemas', (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates/deteccionproblemas.html'));
+});
+
+app.get('/gestos/estadosanimo', (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates/deteccionestadosa.html'));
+});
 
 app.use(express.static('public'));
 

@@ -292,10 +292,10 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
                     <li class="nav-item"><a class="nav-link" href="/inicio.html">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="alfabeto.html">Gestos del Alfabeto</a></li>
-                    <li class="nav-item"><a class="nav-link" href="deletreo.html">Deletreo</a></li>
-                    <li class="nav-item"><a class="nav-link" href="proyecto.html">Sobre el proyecto</a></li>
-                    <li class="nav-item"><a class="nav-link" href="contacto.html">Equipo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./alfabeto.html">Gestos del Alfabeto</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./deletreo.html">Deletreo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./proyecto.html">Sobre el proyecto</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./contacto.html">Equipo</a></li>
                     <li class="nav-item"><a class="nav-link" href="/index.html">Salir</a></li>
                 </ul>
             </div>
@@ -308,6 +308,9 @@
             <li><a href="/gestos/saludos">Saludos</a></li>
             <li><a href="#" class="active">Emociones</a></li>
             <li><a href="/gestos/presentacion">Presentación</a></li>
+            <li><a href="/gestos/negacion">Negación y Existencia</a></li>
+            <li><a href="/gestos/ubicacion">Ubicación</a></li>
+            <li><a href="/gestos/problemas">Problemas y Situaciones</a></li>
         </ul>
     </div>
 
@@ -322,7 +325,7 @@
             <div class="target-container">
                 <h2>Gesto Objetivo:</h2>
                 <!-- Cambiar la imagen por un video -->
-                <video id="targetVideo" controls></video>
+                <video id="targetVideo" muted autoplay loop></video>
                 <p id="targetLabel"></p>
                 <img id="checkmark" src="/static/check_image/checkmark.png" alt="Correct!">
                 <div class="button-container">
@@ -346,7 +349,7 @@
     crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script>
-    const video = document.getElementById('video');
+const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const resultDiv = document.getElementById('result');
@@ -393,7 +396,7 @@ function loadNewVideo() {
 
                 // Obtener el audio
                 const audioName = data.target;
-                const audioPath = `/assets/audio/${audioName}.mp3`;
+                const audioPath = `/assets/audio/emotions/${audioName}.mp3`;
                
 
                 // Crear un elemento audio
