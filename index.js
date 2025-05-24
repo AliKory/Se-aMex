@@ -62,6 +62,38 @@ app.get('/gestos/estadosanimo', (req, res) => {
     res.sendFile(path.join(__dirname, 'templates/deteccionestadosa.html'));
 });
 
+app.get('/gestos/salud', (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates/deteccionsalud.html'));
+});
+
+app.get('/gestos/conducta', (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates/deteccionconducta.html'));
+});
+
+app.get('/gestos/familia', (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates/deteccionfamilia.html'));
+});
+
+app.get('/gestos/verbos', (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates/deteccionverbos.html'));
+});
+
+app.get('/gestos/comunicacion', (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates/deteccioncomunicacion.html'));
+});
+
+app.get('/gestos/tiempo', (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates/detecciontiempo.html'));
+});
+
+app.get('/gestos/descripcion', (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates/detecciondescripcion.html'));
+});
+
+app.get('/gestos/preguntas', (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates/deteccionpreguntas.html'));
+});
+
 app.use(express.static('public'));
 
 app.use("/", express.static(path.join(__dirname, '/')));

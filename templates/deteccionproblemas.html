@@ -292,10 +292,11 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
                     <li class="nav-item"><a class="nav-link" href="/inicio.html">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./alfabeto.html">Gestos del Alfabeto</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./deletreo.html">Deletreo</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./proyecto.html">Sobre el proyecto</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./contacto.html">Equipo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="alfabetoma.html">Gestos del Alfabeto</a></li>
+                    <li class="nav-item"><a class="nav-link" href="deletreo.html">Deletreo</a></li>
+                    <!--<li class="nav-item"><a class="nav-link" href="grafico.html">Gráfico</a></li> -->
+                    <li class="nav-item"><a class="nav-link" href="proyecto.html">Sobre el proyecto</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contacto.html">Equipo</a></li>
                     <li class="nav-item"><a class="nav-link" href="/index.html">Salir</a></li>
                 </ul>
             </div>
@@ -311,6 +312,14 @@
             <li><a href="/gestos/negacion">Negación y Existencia</a></li>
             <li><a href="/gestos/ubicacion">Ubicación</a></li>
             <li><a href="#" class="active">Problemas y Situaciones</a></li>
+            <li><a href="/gestos/estadosanimo">Estados de Ánimo</a></li>
+            <li><a href="/gestos/conducta">Conducta y Comportamiento</a></li> 
+            <li><a href="/gestos/salud">Salud y Bienestar</a></li>
+            <li><a href="/gestos/familia">Familia y Relaciones</a></li>
+            <li><a href="/gestos/comunicacion">Comunicación e Interacción</a></li>
+            <li><a href="/gestos/tiempo">Tiempo y Cantidad</a></li>
+            <li><a href="/gestos/verbos">Acciones y Verbos</a></li>
+            <li><a href="/gestos/preguntas">Preguntas Específicas</a></li>
         </ul>
     </div>
 
@@ -349,123 +358,124 @@
     crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script>
-const video = document.getElementById('video');
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-const resultDiv = document.getElementById('result');
-const targetLabel = document.getElementById('targetLabel');
-const checkmark = document.getElementById('checkmark');
-const skipButton = document.getElementById('skipButton');
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const resultDiv = document.getElementById('result');
+    const targetLabel = document.getElementById('targetLabel');
+    const checkmark = document.getElementById('checkmark');
+    const skipButton = document.getElementById('skipButton');
 
-// Solicitar acceso a la cámara
-navigator.mediaDevices.getUserMedia({ video: true })
-    .then(stream => {
-        video.srcObject = stream;
-    })
-    .catch(err => console.error('Error accessing camera:', err));
+    // Solicitar acceso a la cámara
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(err => console.error('Error accessing camera:', err));
 
-function skipToNextVideo() {
-    fetch('http://localhost:5000/gestos/problemas/skip', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                loadNewVideo();  // Cargar el nuevo video
-            } else {
-                console.error('Error al cambiar la seña:', data.message);
+    function skipToNextVideo() {
+        fetch('http://localhost:5000/gestos/problemas/skip', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
             }
         })
-        .catch(error => console.error('Error:', error));
-}
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    loadNewVideo();  // Cargar el nuevo video
+                } else {
+                    console.error('Error al cambiar la seña:', data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
 
-function loadNewVideo() {
-    fetch('http://localhost:5000/gestos/problemas/get_current_video')  // Corregido el endpoint
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                const targetVideo = document.getElementById('targetVideo');
-                targetVideo.src = data.video_url;
-                targetLabel.textContent = data.target;
+    function loadNewVideo() {
+        fetch('http://localhost:5000/gestos/problemas/get_current_video')  // Corregido el endpoint
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const targetVideo = document.getElementById('targetVideo');
+                    targetVideo.src = data.video_url;
+                    targetLabel.textContent = data.target;
 
-                // Reproducir el video automáticamente
-                targetVideo.play();
+                    // Reproducir el video automáticamente
+                    targetVideo.play();
 
-                // Obtener el audio
-                const audioName = data.target;
-                const audioPath = `/assets/audio/problem/${audioName}.m4a`;
-               
+                    // Obtener el audio
+                    const audioName = data.target;
+                    const audioPath = `/assets/audio/problem/${audioName}.m4a`;
 
-                // Crear un elemento audio
-                const audioElement = new Audio(audioPath);
 
-                // Manejar errores
-                audioElement.onerror = () => {
-                    console.error('Error al cargar el audio:', audioPath);
-                };
+                    // Crear un elemento audio
+                    const audioElement = new Audio(audioPath);
 
-                // Reproducir el audio
-                audioElement.play().catch(error => console.error('Error al reproducir audio:', error));
-            } else {
-                console.error('Error al cargar el video:', data.message);
-            }
+                    // Manejar errores
+                    audioElement.onerror = () => {
+                        console.error('Error al cargar el audio:', audioPath);
+                    };
+
+                    // Reproducir el audio
+                    audioElement.play().catch(error => console.error('Error al reproducir audio:', error));
+                } else {
+                    console.error('Error al cargar el video:', data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function captureFrame() {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = canvas.toDataURL('image/jpeg');
+
+        fetch('http://localhost:5000/gestos/problemas/predict', {  // Corregido el endpoint
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ frame: imageData.split(',')[1] })
         })
-        .catch(error => console.error('Error:', error));
-}
+            .then(response => response.json())
+            .then(data => {
+                resultDiv.textContent = `Predicción: ${data.prediction}`;
+                if (data.prediction === targetLabel.textContent) {
+                    const audio = new Audio('/static/check_image/check.mp3');
+                    audio.play();
 
-function captureFrame() {
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const imageData = canvas.toDataURL('image/jpeg');
-
-    fetch('http://localhost:5000/gestos/problemas/predict', {  // Corregido el endpoint
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ frame: imageData.split(',')[1] })
-    })
-        .then(response => response.json())
-        .then(data => {
-            resultDiv.textContent = `Predicción: ${data.prediction}`;
-            if (data.prediction === targetLabel.textContent) {
-                const audio = new Audio('/static/check_image/check.mp3');
-                audio.play();
-
-                checkmark.style.display = 'block';
-                setTimeout(() => {
+                    checkmark.style.display = 'block';
+                    setTimeout(() => {
+                        checkmark.style.display = 'none';
+                        loadNewVideo();  // Cargar un nuevo video si la predicción es correcta
+                    }, 1000);
+                } else {
                     checkmark.style.display = 'none';
-                    loadNewVideo();  // Cargar un nuevo video si la predicción es correcta
-                }, 1000);
-            } else {
-                checkmark.style.display = 'none';
-            }
-        })
-        .catch(error => console.error('Error:', error));
-}
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
 
-// Agregar evento click al botón de saltar
-skipButton.addEventListener('click', skipToNextVideo);
+    // Agregar evento click al botón de saltar
+    skipButton.addEventListener('click', skipToNextVideo);
 
-// Cargar el primer video al iniciar
-loadNewVideo();
+    // Cargar el primer video al iniciar
+    loadNewVideo();
 
-// Capturar frames cada segundo
-setInterval(captureFrame, 1000);
+    // Capturar frames cada segundo
+    setInterval(captureFrame, 1000);
 
-lucide.createIcons();
+    lucide.createIcons();
 
-$(document).ready(function () {
-    $('.navbar-toggler').click(function () {
-        $('.sidebar').toggleClass('sidebar-visible');
+    $(document).ready(function () {
+        $('.navbar-toggler').click(function () {
+            $('.sidebar').toggleClass('sidebar-visible');
+        });
     });
-});
 
-window.onload = function () {
-    document.getElementById("targetLabel").innerText = "";  // Si se muestra en un div
-};
+    window.onload = function () {
+        document.getElementById("targetLabel").innerText = "";  // Si se muestra en un div
+    };
 </script>
 </body>
+
 </html>
