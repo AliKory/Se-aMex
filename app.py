@@ -7,80 +7,67 @@ import base64
 import random
 from flask_cors import CORS
 
-
 app = Flask(__name__, static_url_path='/static', static_folder='static')
 CORS(app)
 
 # Cargar modelos
+#Modelo Abecedario
 model_dict = pickle.load(open('./model/model.p', 'rb'))  
 model = model_dict['model']
-
+#Modelo Saludos
 models_dict = pickle.load(open('./model/models.p', 'rb'))
 models = models_dict['model']
-
+#Modelo Emociones
 modelr_dict = pickle.load(open('./model/modelr.p', 'rb'))
 modelr = modelr_dict['model']
-
+#Modelo Presentacion
 modelp_dict = pickle.load(open('./model/modelp.p', 'rb')) 
 modelp = modelp_dict['model'] 
-
+#Modelo Negación y Existencia
 modeln_dict = pickle.load(open('./model/modeln.p', 'rb'))
 modeln = modeln_dict['model']
-
+#Modelo Ubicación
 modelu_dict = pickle.load(open('./model/modelu.p', 'rb'))
 modelu_dict = modelu_dict['model']
-
+#Modelo Problemas
 modelps_dict = pickle.load(open('./model/modelps.p', 'rb'))
 modelps = modelps_dict['model']
-
+#Modelo Estados de Ánimo
 modeles_dict = pickle.load(open('./model/modeles.p', 'rb'))
 modeles = modeles_dict['model']
-
-modelsb_dict = pickle.load(open('./model/modelsb.p', 'rb'))
-modelsb = modelsb_dict['model']
-
+#Modelo Conducta
 modelc_dict = pickle.load(open('./model/modelc.p', 'rb'))
 modelc = modelc_dict['model']
-
+#Modelo Salud y Bienestar
+modelsb_dict = pickle.load(open('./model/modelsb.p', 'rb'))
+modelsb = modelsb_dict['model']
+#Modelo Familia
 modelf_dict = pickle.load(open('./model/modelf.p', 'rb'))
 modelf = modelf_dict['model']
 
-modelv_dict = pickle.load(open('./model/modelv.p', 'rb'))
-modelv = modelv_dict['model']
-
-modelcel_dict = pickle.load(open('./model/modelcel.p', 'rb'))
-modelcel = modelcel_dict['model']
-
-modelt_dict = pickle.load(open('./model/modelt.p', 'rb'))
-modelt = modelt_dict['model']
-
-modeldc_dict = pickle.load(open('./model/modeldc.p', 'rb'))
-modeldc = modeldc_dict['model']
-
-modelpe_dict = pickle.load(open('./model/modelpe.p', 'rb'))
-modelpe = modelpe_dict['model']
-# Cargar los otros modelos con el nombre del excel
-
 # Diccionarios de etiquetas
+#Etiquetas del modelo Abecedario
 labels_dict = {0:'a',1:'b',2:'c',3:'d',4:'e',5:'f',6:'g',7:'h',8:'i',9:'j',10:'k',11:'l',12:'ll',13:'m',14:'n',15:'ñ',16:'o',17:'p',18:'q',19:'r',20:'rr',21:'s',22:'t',23:'u',24:'v',25:'w',26:'x',27:'y',28:'z'}
+#Etiquetas del modelo Saludos
 labels_dicts = { 0: 'Hola', 1: 'Buenos dias', 2: 'Buenas tardes', 3: 'Buenas noches', 4: '¿Como estas?',}
-labels_dictr = { 0: 'Bien',  1: 'Mal',  2: 'Más o menos',  3: 'Enojado',  4: 'Triste',  5: 'Serio',  6: 'Apenado',  7: 'Contento',  8: 'Feliz',  9: 'Molesto',  
-10: 'Hambriento',  11: 'Bailarín',  12: 'Malo',  13: 'Bueno',  14: 'Alegre',  15: 'Llorar' }
+#Etiquetas del modelo Emociones
+labels_dictr = { 0: 'Bien',  1: 'Mal',  2: 'Más o menos',  3: 'Enojado',  4: 'Triste',  5: 'Serio',  6: 'Apenado',  7: 'Contento',  8: 'Feliz',  9: 'Molesto', 10: 'Hambriento',  11: 'Bailarín',  12: 'Malo',  13: 'Bueno',  14: 'Alegre',  15: 'Llorar' }
+#Etiquetas del modelo Presentación
 labels_dictp = { 0: 'Nombre',  1: 'Seña'}
+#Etiquetas del modelo Negación y Existencia
 labels_dictn = { 0: 'No sé',  1: 'Nada/ De nada',  2: 'Nadie',  3: 'No hay',  4: 'No necesito'}
+#Etiquetas del modelo Ubicación
 labels_dictu = { 0: '¿Donde?',  1: 'Lugar',  2: 'Ciudad',  3: '¿Donde vives?',  4: 'Escuela',  5: 'Salón',  6: 'Salir'}
+#Etiquetas del modelo Problemas
 labels_dictps = {0:'Emergencia',1:'Cuidado',2:'Peligro',3:'Problema',4:'Accidente',5:'Culpa',6:'Sucio',7:'Basura',8:'No sirve',9:'Memoria',10:'Descompuesto',11:'Reparar',12:'Prohibido',13:'Error'}
+# Etiquetas del modelo Estados de Ánimo
 labels_dictes = {0:'Tranquilo', 1:'Distraído', 2:'Confianza', 3:'Confundido', 4:'Sentir', 5:'Quiero', 6:'No quiero', 7:'Mejor', 8:'Peor', 9:'Grave', 10:'Me siento débil'}
-labels_dictsb = {0:'Enfermo', 1:'Gripa', 2:'Bañate', 3:'Desayunar', 4:'Almuerzo',5:'Comer'}
+#Etiquetas del modelo Conducta
 labels_dictc = {0:'Regañar', 1:'Castigar', 2: 'Obedecer', 3: 'Travieso', 4: 'Educado', 5: 'Responsable', 6: 'Respeto', 7: 'Tramposo', 8: 'No hagas caso', 9: 'Grosero', 10: 'Burla', 11: 'Criticar', 12: 'Evitar', 13: 'Participar', 14: 'Levantar la mano', 15: 'Permiso', 16: 'Quitar', 17: 'Ni modo', 18: 'Aguantate', 19: 'Reglas', 20: 'Fila', 21: 'Silencio', 22: 'Callate', 23: 'Necio', 24: 'No gritar', 25: 'Siéntate', 26: 'Ponte de pie', 27: 'No correr', 28: 'No empujar', 29: 'Pelear/golpear', 30: 'Bullying', 31: 'Perdón', 32: 'Disculpa', 33: 'Ya!'}
+#Etiquetas del modelo Salud y Bienestar
+labels_dictsb = {0:'Enfermo', 1:'Gripa', 2:'Bañate', 3:'Desayunar', 4:'Almuerzo',5:'Comer'}
+#Etiquetas del modelo Familia
 labels_dictf = {0: 'Mamá', 1: 'Papá', 2: 'Maestro', 3: 'Maestra', 4: 'Director', 5: 'Directora', 6: 'Jefe', 7: 'Abuelo', 8: 'Abuela', 9: 'Tío', 10: 'Tia', 11: 'Primo', 12: 'Prima', 13: 'Hermano', 14: 'Hermana', 15: 'Amigo', 16: 'Amiga', 17: 'Novio', 18: 'Vecino', 19: 'Vecina'}
-labels_dictv = {0: 'Guardar cosas', 1: 'Ordena/organiza', 2: 'Limpiar', 3: 'Ver', 4: 'Mira', 5: 'Decir', 6: 'Recordar', 7: 'Olvidar', 8: 'Hablar', 9: 'Platicar', 10: 'Aprender', 11: 'Enseñar', 12: 'Bailar', 13: 'Tarea', 14: 'Estudiar', 15: 'Pensar', 16: 'Saber', 17: 'Hacer', 18: 'Usar', 19: 'Trabajar', 20: 'Dormir', 21: 'Despertar', 22: 'Prestar'}
-labels_dictcel = {0: 'Atención', 1: 'Fijate', 2: 'Mentira/mentiroso', 3: 'Verdad', 4: 'Falso..', 5: 'Dime', 6: 'Estar de acuerdo', 7: '¿Puedo?', 8: 'No puedo', 9: 'Basta!', 10: 'Pregunta', 11: 'Tu pregunta', 12: 'A mi pregúntame', 13: 'A todos le preguntarée', 14: '¿Si me entendiste?', 15: 'No entendiste', 16: 'Avisar', 17: 'Engañar'}
-labels_dictt = {0: '¿Cuándo?', 1: '¿Cuántos?', 2: 'Tiempo', 3: 'Temprano', 4: 'Tarde', 5: 'Poco', 6: 'Mucho', 7: 'Menos', 8: 'Otra vez/repetir', 9: 'Otro'}
-labels_dictdc = {0: 'Feo', 1: 'Bonito', 2: 'Tu ropa sucia', 3: 'Tu ropa limpia', 4: 'Bien', 5: 'Mal', 6: 'Me gusta', 7: 'No me gusta', 8: 'Lento', 9: 'Rápido'}
-labels_dictpe = {0: '¿Qué haces?', 1: '¿Para?', 2: '¿Para qué?', 3: '¿Por qué?', 4: '¿Qué pasó?', 5: '¿Cómo?', 6: '¿Qué significa?', 7: '¿Qué necesitas?'}
-#Cargar los labels con el nombre del excel
-
 
 # Configuración de MediaPipe
 mp_hands = mp.solutions.hands
@@ -95,16 +82,9 @@ negation_videos = ['no_se.mp4', 'nada.mp4', 'nadie.mp4', 'no_hay.mp4', 'no_neces
 location_videos = ['donde.mp4', 'lugar.mp4', 'ciudad.mp4', 'donde_vives.mp4', 'escuela.mp4', 'salon.mp4', 'salir.mp4']
 problem_videos = ['emergencia.mp4', 'cuidado.mp4', 'peligro.mp4', 'problema.mp4', 'accidente.mp4', 'culpa.mp4', 'sucio.mp4', 'basura.mp4', 'no_sirve.mp4', 'memoria.mp4', 'descompuesto.mp4', 'reparar.mp4', 'prohibido.mp4', 'error.mp4']
 moods_videos = ['tranquilo.mp4', 'distraído.mp4', 'confianza.mp4', 'confundido.mp4', 'sentir.mp4', 'quiero.mp4', 'no_quiero.mp4', 'mejor.mp4', 'peor.mp4', 'grave.mp4', 'me_siento_débil.mp4']
-health_videos = ['enfermo.mp4', 'gripa.mp4', 'banate.mp4', 'desayunar.mp4', 'almuerzo.mp4', 'comer.mp4']
 conduct_videos = ['regañar.mp4', 'castigar.mp4', 'obedecer.mp4', 'travieso.mp4', 'educado.mp4', 'responsable.mp4', 'respeto.mp4', 'tramposo.mp4', 'no_hagas_caso.mp4', 'grosero.mp4', 'burla.mp4', 'criticar.mp4', 'evitar.mp4', 'participar.mp4', 'levantar_la_mano.mp4', 'permiso.mp4', 'quitar.mp4', 'ni_modo.mp4', 'aguantate.mp4', 'reglas.mp4', 'fila.mp4', 'silencio.mp4', 'callate.mp4', 'necio.mp4', 'no_gritar.mp4', 'sientate.mp4', 'ponte_de_pie.mp4', 'no_correr.mp4', 'no_empujar.mp4','pelear.mp4','bullying.mp4','perdon.mp4','disculpa.mp4','ya_mp4']
+health_videos = ['enfermo.mp4', 'gripa.mp4', 'banate.mp4', 'desayunar.mp4', 'almuerzo.mp4', 'comer.mp4']
 family_videos = ['mama.mp4', 'papa.mp4', 'maestro.mp4', 'maestra.mp4', 'director.mp4', 'directora.mp4', 'jefe.mp4', 'abuelo.mp4', 'abuela.mp4', 'tio.mp4', 'tia.mp4', 'primo.mp4', 'prima.mp4', 'hermano.mp4', 'hermana.mp4', 'amigo.mp4', 'amiga.mp4', 'novio.mp4', 'vecino.mp4', 'vecina.mp4']
-verbs_videos = ['guardar_cosas.mp4', 'ordena_organizar.mp4', 'limpiar.mp4', 'ver.mp4', 'mira.mp4', 'decir.mp4', 'recordar.mp4', 'olvidar.mp4', 'hablar.mp4', 'platicar.mp4', 'aprender.mp4', 'enseñar.mp4', 'bailar.mp4', 'tarea.mp4', 'estudiar.mp4', 'pensar.mp4', 'saber.mp4', 'hacer.mp4', 'usar.mp4', 'trabajar.mp4', 'dormir.mp4', 'despertar.mp4', 'prestar.mp4']
-conduct_videos = ['atencion.mp4', 'fijate.mp4', 'mentira.mp4', 'verdad.mp4', 'falso.mp4', 'dime.mp4', 'estar_de_acuerdo.mp4', 'puedo.mp4', 'no_puedo.mp4', 'basta.mp4', 'pregunta.mp4', 'tu_pregunta.mp4', 'a_mi_preguntame.mp4', 'a_todos_le_preguntare.mp4', 'si_me_entendiste.mp4', 'no_entendiste.mp4', 'avisar.mp4', 'enganar.mp4']
-time_videos = ['cuando.mp4', 'cuantos.mp4', 'tiempo.mp4', 'temprano.mp4', 'tarde.mp4', 'poco.mp4', 'mucho.mp4', 'menos.mp4', 'otra_vez.mp4', 'otro.mp4']
-description_videos = ['feo.mp4', 'bonito.mp4', 'tu_ropa_sucia.mp4', 'tu_ropa_limpia.mp4', 'bien.mp4', 'mal.mp4', 'me_gusta.mp4', 'no_me_gusta.mp4', 'lento.mp4', 'rapido.mp4']
-questions_videos = ['que_haces.mp4', 'para.mp4', 'para_que.mp4', 'por_que.mp4', 'que_paso.mp4', 'como.mp4', 'que_significa.mp4', 'que_necesitas.mp4']
-#Cargar las listas de videos con el mismo nombre de la seña, estos deben estar almacenados en la carpeta videos/(crear carpeta con el nombre)/
-
 
 # Obtener índices válidos
 valid_indices = list(range(len(sign_images)))
@@ -115,15 +95,9 @@ negation_indices = list(range(len(negation_videos)))
 location_indices = list(range(len(location_videos)))
 problem_indices = list(range(len(problem_videos)))
 moods_indices = list(range(len(moods_videos)))
+conduct_indices = list(range(len(conduct_videos)))
 health_indices = list(range(len(health_videos)))
-conduct_indices = list(range(len(conduct_videos)))
 family_indices = list(range(len(family_videos)))
-verbs_indices = list(range(len(verbs_videos)))
-conduct_indices = list(range(len(conduct_videos)))
-time_indices = list(range(len(time_videos)))
-description_indices = list(range(len(description_videos)))
-questions_indices = list(range(len(questions_videos)))
-# Obtener indices (nombre_indice)
 
 def new_random_image():
     random_index = random.choice(valid_indices)
@@ -138,14 +112,9 @@ current_negation_index = 0
 current_location_index = 0
 current_problem_index = 0
 current_mood_index = 0
+current_conduct_index = 0
 current_health_index = 0
-current_conduct_index = 0
 current_family_index = 0
-current_verb_index = 0
-current_conduct_index = 0
-current_time_index = 0
-current_description_index = 0
-current_questions_index = 0
 
 # Inicializar variables para videos de presentación
 @app.route('/gestos')
@@ -180,37 +149,17 @@ def gestos_problemas():
 def gestos_mood():
     return render_template('deteccionestadosa.html')
 
-@app.route('/gestos/salud')
-def gestos_health():
-    return render_template('deteccionsalud.html')
-
 @app.route('/gestos/conducta')
 def gestos_conduct():
     return render_template('deteccionconducta.html')
 
+@app.route('/gestos/salud')
+def gestos_health():
+    return render_template('deteccionsalud.html')
+
 @app.route('/gestos/familia')
 def gestos_family():
     return render_template('deteccionfamilia.html')
-
-@app.route('/gestos/verbos')
-def gestos_verbs():
-    return render_template('deteccionverbos.html')
-
-@app.route('/gestos/comunicacion')
-def gestos_comunicacion():
-    return render_template('deteccioncomunicacion.html')
-
-@app.route('/gestos/tiempo')
-def gestos_time():
-    return render_template('detecciontiempo.html')
-
-@app.route('/gestos/descripcion')
-def gestos_description():
-    return render_template('detecciondescripcion.html')
-
-@app.route('/gestos/preguntas')
-def gestos_questions():
-    return render_template('deteccionpreguntas.html')
 
 # Inicializamos current_target en None para evitar valores residuales
 current_image, current_target = None, None
@@ -221,14 +170,9 @@ current_negation, current_negation_target = None, None
 current_location, current_location_target = None, None  
 current_problem, current_problem_target = None, None  
 current_mood, current_mood_target = None, None
+current_conduct, current_conduct_target = None, None
 current_health, current_health_target = None, None
-current_conduct, current_conduct_target = None, None
 current_family, current_family_target = None, None
-current_verbs, current_verbs_target = None, None
-current_conduct, current_conduct_target = None, None
-current_time, current_time_target = None, None
-current_description, current_description_target = None, None
-current_questions, current_questions_target = None, None
 
 # Deteccion abecedario
 def new_ordered_video():
@@ -321,6 +265,19 @@ def new_ordered_mood():
         current_mood_index = 0
         return moods_videos[current_mood_index], labels_dictes[current_mood_index]
 
+# Deteccion conducta
+def new_ordered_conduct():
+    global current_conduct_index
+    if current_conduct_index < len(conduct_videos):
+        video = conduct_videos[current_conduct_index]
+        target = labels_dictc[current_conduct_index]
+        current_conduct_index += 1
+        return video, target
+    else:
+        # Reiniciar el índice si se llega al final
+        current_conduct_index = 0
+        return conduct_videos[current_conduct_index], labels_dictc[current_conduct_index] 
+    
 # Deteccion salud
 def new_ordered_health():
     global current_health_index
@@ -334,19 +291,6 @@ def new_ordered_health():
         current_health_index = 0
         return health_videos[current_health_index], labels_dictsb[current_health_index] 
 
-# Deteccion conducta
-def new_ordered_conduct():
-    global current_conduct_index
-    if current_conduct_index < len(conduct_videos):
-        video = conduct_videos[current_conduct_index]
-        target = labels_dictc[current_conduct_index]
-        current_conduct_index += 1
-        return video, target
-    else:
-        # Reiniciar el índice si se llega al final
-        current_conduct_index = 0
-        return conduct_videos[current_conduct_index], labels_dictc[current_conduct_index]   
-
 # Deteccion familia
 def new_ordered_family():
     global current_family_index
@@ -358,72 +302,7 @@ def new_ordered_family():
     else:
         # Reiniciar el índice si se llega al final
         current_family_index = 0
-        return family_videos[current_family_index], labels_dictf[current_family_index]  
-
-# Deteccion verbos
-def new_ordered_verbs():
-    global current_verb_index
-    if current_verb_index < len(verbs_videos):
-        video = verbs_videos[current_verb_index]
-        target = labels_dictv[current_verb_index]
-        current_verb_index += 1
-        return video, target
-    else:
-        # Reiniciar el índice si se llega al final
-        current_verb_index = 0
-        return verbs_videos[current_verb_index], labels_dictv[current_verb_index]
-
-# Deteccion conducta
-def new_ordered_conduct():
-    global current_conduct_index
-    if current_conduct_index < len(conduct_videos):
-        video = conduct_videos[current_conduct_index]
-        target = labels_dictcel[current_conduct_index]
-        current_conduct_index += 1
-        return video, target
-    else:
-        # Reiniciar el índice si se llega al final
-        current_conduct_index = 0
-        return conduct_videos[current_conduct_index], labels_dictcel[current_conduct_index]
-
-# Deteccion tiempo
-def new_ordered_time():
-    global current_time_index
-    if current_time_index < len(time_videos):
-        video = time_videos[current_time_index]
-        target = labels_dictt[current_time_index]
-        current_time_index += 1
-        return video, target
-    else:
-        # Reiniciar el índice si se llega al final
-        current_time_index = 0
-        return time_videos[current_time_index], labels_dictt[current_time_index]
-
-# Deteccion descripcion
-def new_ordered_description():
-    global current_description_index
-    if current_description_index < len(description_videos):
-        video = description_videos[current_description_index]
-        target = labels_dictdc[current_description_index]
-        current_description_index += 1
-        return video, target
-    else:
-        # Reiniciar el índice si se llega al final
-        current_description_index = 0
-        return description_videos[current_description_index], labels_dictdc[current_description_index]
-
-# Deteccion preguntas
-def new_ordered_questions():
-    global current_questions_index
-    if current_questions_index < len(questions_videos):
-        video = questions_videos[current_questions_index]
-        target = labels_dictpe[current_questions_index]
-        current_questions_index += 1
-        return video, target
-    else:
-        # Reiniciar el índice si se llega al final
-        current_questions_index = 0
-        return questions_videos[current_questions_index], labels_dictpe[current_questions_index]
+        return family_videos[current_family_index], labels_dictf[current_family_index] 
     
 #Imagen aleatoria Abecedario
 @app.route('/gestos/get_current_image')
@@ -513,6 +392,17 @@ def get_current_mood_video():  # Corregido el nombre de la función
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)})
 
+# Videos aleatorios Conducta
+@app.route('/gestos/conducta/get_current_video')
+def get_current_conduct_video():  # Corregido el nombre de la función
+    global current_conduct, current_conduct_target
+    current_conduct, current_conduct_target = new_ordered_conduct() 
+    try:
+        video_url = url_for('static', filename=f'videos/conduct/{current_conduct}', _external=True)
+        return jsonify({'video_url': video_url, 'target': current_conduct_target, 'status': 'success', 'is_last': current_conduct_index >= len(conduct_videos)})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)})
+    
 # Videos aleatorios Salud
 @app.route('/gestos/salud/get_current_video')
 def get_current_health_video():  # Corregido el nombre de la función
@@ -524,17 +414,6 @@ def get_current_health_video():  # Corregido el nombre de la función
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)})
 
-# Videos aleatorios Conducta
-@app.route('/gestos/conducta/get_current_video')
-def get_current_conduct_video():  # Corregido el nombre de la función
-    global current_conduct, current_conduct_target
-    current_conduct, current_conduct_target = new_ordered_conduct() 
-    try:
-        video_url = url_for('static', filename=f'videos/conduct/{current_conduct}', _external=True)
-        return jsonify({'video_url': video_url, 'target': current_conduct_target, 'status': 'success', 'is_last': current_conduct_index >= len(conduct_videos)})
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)})
-
 # Videos aleatorios Familia
 @app.route('/gestos/familia/get_current_video')
 def get_current_family_video():  # Corregido el nombre de la función
@@ -543,61 +422,6 @@ def get_current_family_video():  # Corregido el nombre de la función
     try:
         video_url = url_for('static', filename=f'videos/family/{current_family}', _external=True)
         return jsonify({'video_url': video_url, 'target': current_family_target, 'status': 'success', 'is_last': current_family_index >= len(family_videos)})
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)})
-
-# Videos aleatorios Verbos
-@app.route('/gestos/verbos/get_current_video')
-def get_current_verb_video():  # Corregido el nombre de la función
-    global current_verbs, current_verbs_target
-    current_verbs, current_verbs_target = new_ordered_verbs() 
-    try:
-        video_url = url_for('static', filename=f'videos/verbs/{current_verbs}', _external=True)
-        return jsonify({'video_url': video_url, 'target': current_verbs_target, 'status': 'success', 'is_last': current_verb_index >= len(verbs_videos)})
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)})
-
-# Videos aleatorios Conducta
-@app.route('/gestos/conducta/get_current_video')
-def get_current_conduct_video():  # Corregido el nombre de la función
-    global current_conduct, current_conduct_target
-    current_conduct, current_conduct_target = new_ordered_conduct() 
-    try:
-        video_url = url_for('static', filename=f'videos/conduct/{current_conduct}', _external=True)
-        return jsonify({'video_url': video_url, 'target': current_conduct_target, 'status': 'success', 'is_last': current_conduct_index >= len(conduct_videos)})
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)})  
-
-# Videos aleatorios Tiempo
-@app.route('/gestos/tiempo/get_current_video')
-def get_current_time_video():  # Corregido el nombre de la función
-    global current_time, current_time_target
-    current_time, current_time_target = new_ordered_time() 
-    try:
-        video_url = url_for('static', filename=f'videos/time/{current_time}', _external=True)
-        return jsonify({'video_url': video_url, 'target': current_time_target, 'status': 'success', 'is_last': current_time_index >= len(time_videos)})
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)})  
-
-# Videos aleatorios Descripcion
-@app.route('/gestos/descripcion/get_current_video')
-def get_current_description_video():  # Corregido el nombre de la función
-    global current_description, current_description_target
-    current_description, current_description_target = new_ordered_description() 
-    try:
-        video_url = url_for('static', filename=f'videos/description/{current_description}', _external=True)
-        return jsonify({'video_url': video_url, 'target': current_description_target, 'status': 'success', 'is_last': current_description_index >= len(description_videos)})
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)})
-
-# Videos aleatorios Preguntas
-@app.route('/gestos/preguntas/get_current_video')
-def get_current_questions_video():  # Corregido el nombre de la función
-    global current_questions, current_questions_target
-    current_questions, current_questions_target = new_ordered_questions() 
-    try:
-        video_url = url_for('static', filename=f'videos/questions/{current_questions}', _external=True)
-        return jsonify({'video_url': video_url, 'target': current_questions_target, 'status': 'success', 'is_last': current_questions_index >= len(questions_videos)})
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)})
     
@@ -657,13 +481,6 @@ def skip_mood_video():
     current_mood, current_mood_target = new_ordered_mood()  # Corregido el nombre de la variable
     return jsonify({'status': 'success', 'video_url': url_for('static', filename=f'videos/moods/{current_mood}', _external=True), 'target': current_mood_target})
 
-# Boton salto salud
-@app.route('/gestos/salud/skip', methods=['POST'])
-def skip_health_video():
-    global current_health, current_health_target  # Corregido el nombre de la variable
-    current_health, current_health_target = new_ordered_health()  # Corregido el nombre de la variable
-    return jsonify({'status': 'success', 'video_url': url_for('static', filename=f'videos/health/{current_health}', _external=True), 'target': current_health_target})
-
 # Boton salto conducta
 @app.route('/gestos/conducta/skip', methods=['POST'])
 def skip_conduct_video():
@@ -671,40 +488,19 @@ def skip_conduct_video():
     current_conduct, current_conduct_target = new_ordered_conduct()  # Corregido el nombre de la variable
     return jsonify({'status': 'success', 'video_url': url_for('static', filename=f'videos/conduct/{current_conduct}', _external=True), 'target': current_conduct_target})
 
+# Boton salto salud
+@app.route('/gestos/salud/skip', methods=['POST'])
+def skip_health_video():
+    global current_health, current_health_target  # Corregido el nombre de la variable
+    current_health, current_health_target = new_ordered_health()  # Corregido el nombre de la variable
+    return jsonify({'status': 'success', 'video_url': url_for('static', filename=f'videos/health/{current_health}', _external=True), 'target': current_health_target})
+
 # Boton salto familia
 @app.route('/gestos/familia/skip', methods=['POST'])
 def skip_family_video():
     global current_family, current_family_target  # Corregido el nombre de la variable
     current_family, current_family_target = new_ordered_family()  # Corregido el nombre de la variable
     return jsonify({'status': 'success', 'video_url': url_for('static', filename=f'videos/family/{current_family}', _external=True), 'target': current_family_target})
-
-# Boton salto verbos
-@app.route('/gestos/verbos/skip', methods=['POST'])
-def skip_verb_video():
-    global current_verbs, current_verbs_target  # Corregido el nombre de la variable
-    current_verbs, current_verbs_target = new_ordered_verbs()  # Corregido el nombre de la variable
-    return jsonify({'status': 'success', 'video_url': url_for('static', filename=f'videos/verbs/{current_verbs}', _external=True), 'target': current_verbs_target})
-
-# Boton salto tiempo
-@app.route('/gestos/tiempo/skip', methods=['POST'])
-def skip_time_video():
-    global current_time, current_time_target  # Corregido el nombre de la variable
-    current_time, current_time_target = new_ordered_time()  # Corregido el nombre de la variable
-    return jsonify({'status': 'success', 'video_url': url_for('static', filename=f'videos/time/{current_time}', _external=True), 'target': current_time_target})
-
-# Boton salto descripcion
-@app.route('/gestos/descripcion/skip', methods=['POST'])    
-def skip_description_video():
-    global current_description, current_description_target  # Corregido el nombre de la variable
-    current_description, current_description_target = new_ordered_description()  # Corregido el nombre de la variable
-    return jsonify({'status': 'success', 'video_url': url_for('static', filename=f'videos/description/{current_description}', _external=True), 'target': current_description_target})
-
-# Boton salto preguntas
-@app.route('/gestos/preguntas/skip', methods=['POST'])
-def skip_questions_video():
-    global current_questions, current_questions_target  # Corregido el nombre de la variable
-    current_questions, current_questions_target = new_ordered_questions()  # Corregido el nombre de la variable
-    return jsonify({'status': 'success', 'video_url': url_for('static', filename=f'videos/questions/{current_questions}', _external=True), 'target': current_questions_target})
 
 # Usar el modelo abecedario
 @app.route('/gestos/predict', methods=['POST'])
@@ -746,45 +542,20 @@ def predict_problem():
 def predict_mood():
     return process_prediction(modeles, labels_dictes)
 
-# Usar el modelo salud
-@app.route('/gestos/salud/predict', methods=['POST'])
-def predict_health():
-    return process_prediction(modelsb, labels_dictsb)
-
 # Usar el modelo conducta
 @app.route('/gestos/conducta/predict', methods=['POST'])
 def predict_conduct():
     return process_prediction(modelc, labels_dictc)
 
+# Usar el modelo salud
+@app.route('/gestos/salud/predict', methods=['POST'])
+def predict_health():
+    return process_prediction(modelsb, labels_dictsb)
+
 # Usar el modelo familia
 @app.route('/gestos/familia/predict', methods=['POST'])
 def predict_family():
     return process_prediction(modelf, labels_dictf)
-
-# Usar el modelo verbos
-@app.route('/gestos/verbos/predict', methods=['POST'])
-def predict_verbs():
-    return process_prediction(modelv, labels_dictv)
-
-# Usar el modelo conducta
-@app.route('/gestos/conducta/predict', methods=['POST'])
-def predict_conduct():
-    return process_prediction(modelcel, labels_dictcel)
-
-# Usar el modelo tiempo
-@app.route('/gestos/tiempo/predict', methods=['POST'])
-def predict_time():
-    return process_prediction(modelt, labels_dictt)
-
-# Usar el modelo descripcion
-@app.route('/gestos/descripcion/predict', methods=['POST'])
-def predict_description():
-    return process_prediction(modeldc, labels_dictdc)
-
-# Usar el modelo preguntas
-@app.route('/gestos/preguntas/predict', methods=['POST'])
-def predict_questions():
-    return process_prediction(modelpe, labels_dictpe)
 
 # Función para procesar la predicción
 def process_prediction(model_used, labels):

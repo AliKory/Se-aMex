@@ -307,7 +307,7 @@
         <ul>
             <li><a href="/gestos">Abecedario</a></li>
             <li><a href="/gestos/saludos">Saludos</a></li>
-            <li><a href="#" class="active">Emociones</a></li>
+            <li><a href="/gestos/emociones">Emociones</a></li>
             <li><a href="/gestos/presentacion">Presentación</a></li>
             <li><a href="/gestos/negacion">Negación y Existencia</a></li>
             <li><a href="/gestos/ubicacion">Ubicación</a></li>
@@ -315,7 +315,7 @@
             <li><a href="/gestos/estadosanimo">Estados de Ánimo</a></li>
             <li><a href="/gestos/conducta">Conducta y Comportamiento</a></li> 
             <li><a href="/gestos/salud">Salud y Bienestar</a></li>
-            <li><a href="/gestos/familia">Familia y Relaciones</a></li>
+            <li><a href="#" class="active">Familia y Relaciones</a></li>
             <li><a href="/gestos/comunicacion">Comunicación e Interacción</a></li>
             <li><a href="/gestos/tiempo">Tiempo y Cantidad</a></li>
             <li><a href="/gestos/verbos">Acciones y Verbos</a></li>
@@ -429,7 +429,7 @@
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageData = canvas.toDataURL('image/jpeg');
 
-        fetch('http://localhost:5000/gestos/familia/predict', {
+        fetch('http://localhost:5000/gestos/familia/predict', {  // Corregido el endpoint
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -439,7 +439,7 @@
             .then(response => response.json())
             .then(data => {
                 resultDiv.textContent = `Predicción: ${data.prediction}`;
-                if (data.is_correct) {
+                if (data.prediction === targetLabel.textContent) {
                     const audio = new Audio('/static/check_image/check.mp3');
                     audio.play();
 
