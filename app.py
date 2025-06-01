@@ -44,6 +44,9 @@ modelsb = modelsb_dict['model']
 #Modelo Familia
 modelf_dict = pickle.load(open('./model/modelf.p', 'rb'))
 modelf = modelf_dict['model']
+#Modelo Comunicación
+modelcel_dict = pickle.load(open('./model/modelcel.p', 'rb'))
+modelcel = modelcel_dict['model']
 
 # Diccionarios de etiquetas
 #Etiquetas del modelo Abecedario
@@ -68,6 +71,8 @@ labels_dictc = {0:'Regañar', 1:'Castigar', 2: 'Obedecer', 3: 'Travieso', 4: 'Ed
 labels_dictsb = {0:'Enfermo', 1:'Gripa', 2:'Bañate', 3:'Desayunar', 4:'Almuerzo',5:'Comer'}
 #Etiquetas del modelo Familia
 labels_dictf = {0: 'Mamá', 1: 'Papá', 2: 'Maestro', 3: 'Maestra', 4: 'Director', 5: 'Directora', 6: 'Jefe', 7: 'Abuelo', 8: 'Abuela', 9: 'Tío', 10: 'Tia', 11: 'Primo', 12: 'Prima', 13: 'Hermano', 14: 'Hermana', 15: 'Amigo', 16: 'Amiga', 17: 'Novio', 18: 'Vecino', 19: 'Vecina'}
+#Etiquetas del modelo Comunicación
+labels_dictcel = {0: 'Atención', 1: 'Fijate', 2: 'Mentira/mentiroso', 3: 'Verdad', 4: 'Falso..', 5: 'Dime', 6: 'Estar de acuerdo', 7: '¿Puedo?', 8: 'No puedo', 9: 'Basta!', 10: 'Pregunta', 11: 'Tu pregunta', 12: 'A mi pregúntame', 13: 'A todos le preguntarée', 14: '¿Si me entendiste?', 15: 'No entendiste', 16: 'Avisar', 17: 'Engañar'}
 
 # Configuración de MediaPipe
 mp_hands = mp.solutions.hands
@@ -85,6 +90,7 @@ moods_videos = ['tranquilo.mp4', 'distraído.mp4', 'confianza.mp4', 'confundido.
 conduct_videos = ['regañar.mp4', 'castigar.mp4', 'obedecer.mp4', 'travieso.mp4', 'educado.mp4', 'responsable.mp4', 'respeto.mp4', 'tramposo.mp4', 'no_hagas_caso.mp4', 'grosero.mp4', 'burla.mp4', 'criticar.mp4', 'evitar.mp4', 'participar.mp4', 'levantar_la_mano.mp4', 'permiso.mp4', 'quitar.mp4', 'ni_modo.mp4', 'aguantate.mp4', 'reglas.mp4', 'fila.mp4', 'silencio.mp4', 'callate.mp4', 'necio.mp4', 'no_gritar.mp4', 'sientate.mp4', 'ponte_de_pie.mp4', 'no_correr.mp4', 'no_empujar.mp4','pelear.mp4','bullying.mp4','perdon.mp4','disculpa.mp4','ya_mp4']
 health_videos = ['enfermo.mp4', 'gripa.mp4', 'banate.mp4', 'desayunar.mp4', 'almuerzo.mp4', 'comer.mp4']
 family_videos = ['mama.mp4', 'papa.mp4', 'maestro.mp4', 'maestra.mp4', 'director.mp4', 'directora.mp4', 'jefe.mp4', 'abuelo.mp4', 'abuela.mp4', 'tio.mp4', 'tia.mp4', 'primo.mp4', 'prima.mp4', 'hermano.mp4', 'hermana.mp4', 'amigo.mp4', 'amiga.mp4', 'novio.mp4', 'vecino.mp4', 'vecina.mp4']
+comunication_videos = ['atencion.mp4', 'fijate.mp4', 'mentira.mp4', 'verdad.mp4', 'falso.mp4', 'dime.mp4', 'estar_de_acuerdo.mp4', 'puedo.mp4', 'no_puedo.mp4', 'basta.mp4', 'pregunta.mp4', 'tu_pregunta.mp4', 'a_mi_preguntame.mp4', 'a_todos_le_preguntare.mp4', 'si_me_entendiste.mp4', 'no_entendiste.mp4', 'avisar.mp4', 'enganar.mp4']
 
 # Obtener índices válidos
 valid_indices = list(range(len(sign_images)))
@@ -98,6 +104,7 @@ moods_indices = list(range(len(moods_videos)))
 conduct_indices = list(range(len(conduct_videos)))
 health_indices = list(range(len(health_videos)))
 family_indices = list(range(len(family_videos)))
+comunication_indices = list(range(len(conduct_videos)))
 
 def new_random_image():
     random_index = random.choice(valid_indices)
@@ -115,6 +122,7 @@ current_mood_index = 0
 current_conduct_index = 0
 current_health_index = 0
 current_family_index = 0
+current_comunication_index = 0
 
 # Inicializar variables para videos de presentación
 @app.route('/gestos')
@@ -161,6 +169,10 @@ def gestos_health():
 def gestos_family():
     return render_template('deteccionfamilia.html')
 
+@app.route('/gestos/comunicacion')
+def gestos_comunicacion():
+    return render_template('deteccioncomunicacion.html')
+
 # Inicializamos current_target en None para evitar valores residuales
 current_image, current_target = None, None
 current_video, current_target = None, None
@@ -173,6 +185,7 @@ current_mood, current_mood_target = None, None
 current_conduct, current_conduct_target = None, None
 current_health, current_health_target = None, None
 current_family, current_family_target = None, None
+current_comunication, current_comunication_target = None, None
 
 # Deteccion abecedario
 def new_ordered_video():
@@ -303,6 +316,19 @@ def new_ordered_family():
         # Reiniciar el índice si se llega al final
         current_family_index = 0
         return family_videos[current_family_index], labels_dictf[current_family_index] 
+
+# Deteccion comunicacion
+def new_ordered_comunication():
+    global current_comunication_index
+    if current_comunication_index < len(comunication_videos):
+        video = comunication_videos[current_comunication_index]
+        target = labels_dictcel[current_comunication_index]
+        current_comunication_index += 1
+        return video, target
+    else:
+        # Reiniciar el índice si se llega al final
+        current_comunication_index = 0
+        return comunication_videos[current_comunication_index], labels_dictcel[current_comunication_index]
     
 #Imagen aleatoria Abecedario
 @app.route('/gestos/get_current_image')
@@ -424,6 +450,17 @@ def get_current_family_video():  # Corregido el nombre de la función
         return jsonify({'video_url': video_url, 'target': current_family_target, 'status': 'success', 'is_last': current_family_index >= len(family_videos)})
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)})
+
+# Videos aleatorios Comunicacion
+@app.route('/gestos/comunicacion/get_current_video')
+def get_current_comunication_video():  # Corregido el nombre de la función
+    global current_comunication, current_comunication_target
+    current_comunication, current_comunication_target = new_ordered_comunication()  
+    try:
+        video_url = url_for('static', filename=f'videos/comunication/{current_comunication}', _external=True)
+        return jsonify({'video_url': video_url, 'target': current_comunication_target, 'status': 'success', 'is_last': current_comunication_index >= len(comunication_videos)})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)})
     
 # Boton salto abecedario
 @app.route('/gestos/skip', methods=['POST'])
@@ -502,6 +539,13 @@ def skip_family_video():
     current_family, current_family_target = new_ordered_family()  # Corregido el nombre de la variable
     return jsonify({'status': 'success', 'video_url': url_for('static', filename=f'videos/family/{current_family}', _external=True), 'target': current_family_target})
 
+# Boton salto comunicacion
+@app.route('/gestos/comunicacion/skip', methods=['POST'])
+def skip_comunication_video():
+    global current_comunication, current_comunication_target  # Corregido el nombre de la variable
+    current_comunication, current_comunication_target = new_ordered_comunication()  # Corregido el nombre de la variable
+    return jsonify({'status': 'success', 'video_url': url_for('static', filename=f'videos/comunication/{current_comunication}', _external=True), 'target': current_comunication_target})
+
 # Usar el modelo abecedario
 @app.route('/gestos/predict', methods=['POST'])
 def predict():
@@ -556,6 +600,11 @@ def predict_health():
 @app.route('/gestos/familia/predict', methods=['POST'])
 def predict_family():
     return process_prediction(modelf, labels_dictf)
+
+# Usar el modelo comunicación
+@app.route('/gestos/comunicacion/predict', methods=['POST'])
+def predict_comunication():
+    return process_prediction(modelcel, labels_dictcel)
 
 # Función para procesar la predicción
 def process_prediction(model_used, labels):
