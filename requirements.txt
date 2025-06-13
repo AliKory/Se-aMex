@@ -1,7 +1,6 @@
 beautifulsoup4
 click
 colorama
-darkdetect
 Eel
 Flask
 Flask-Cors
@@ -16,7 +15,6 @@ opencv-python
 openpyxl
 pandas
 pillow
-pygame
 requests
 soupsieve
 tqdm
