@@ -1,9 +1,6 @@
-auto-py-to-exe
 beautifulsoup4
 click
 colorama
-customtkinter
-cvzone
 darkdetect
 Eel
 Flask
@@ -20,8 +17,6 @@ openpyxl
 pandas
 pillow
 pygame
-pyinstaller
-pyttsx3
 requests
 soupsieve
 tqdm
