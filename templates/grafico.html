@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>SeñaMex</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Custom Google font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="http://localhost:3000/socket.io/socket.io.min.js" defer></script>
+    <script src="/js/scriptm.js" defer></script>
+</head>
+
+<body class="d-flex flex-column h-100 bg-light"
+    style="position: relative; min-height: 100vh; background-image: url('/assets/hero.png'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
+    <main class="flex-shrink-0">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+            <div class="container px-5">
+                <a class="navbar-brand" href="/inicio.html"><span class="fw-bolder text-primary">SeñaMex</span></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation"><span
+                        class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
+                        <li class="nav-item"><a class="nav-link" href="/inicio.html">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" href="alfabetoma.html">Gestos del Alfabeto</a></li>
+                        <li class="nav-item"><a class="nav-link" href="deletreo.html">Deletreo</a></li>
+                        <!--<li class="nav-item"><a class="nav-link" href="grafico.html">Gráfico</a></li> -->
+                        <li class="nav-item"><a class="nav-link" href="proyecto.html">Sobre el proyecto</a></li>
+                        <li class="nav-item"><a class="nav-link" href="contacto.html">Equipo</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/index.html">Salir</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+
+        <body>
+            <canvas id="letterChart" width="400" height="400"></canvas>
+            <script>
+                const ctx = document.getElementById('letterChart').getContext('2d');
+                const letterChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Frecuencia de Letras',
+                            data: [],
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+                const socket = io();
+
+                socket.on('data', function (data) {
+                    const { letter, count } = data;
+                    const index = letterChart.data.labels.indexOf(letter);
+                    if (index === -1) {
+                        letterChart.data.labels.push(letter);
+                        letterChart.data.datasets[0].data.push(count[letter]);
+                    } else {
+                        letterChart.data.datasets[0].data[index] = count[letter];
+                    }
+                    letterChart.update();
+                });
+            </script>
+            <canvas id="letterChart" width="20" height="20"></canvas>
+        </body>
+
+</html>

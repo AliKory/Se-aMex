@@ -1,0 +1,36 @@
+{
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
+    "firebase-admin": "^8.13.0",
+    "mongoose": "^8.2.0",
+    "mqtt": "^4.3.8",
+    "python-shell": "^5.0.0",
+    "socket.io": "^4.7.4"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "electron": "^35.2.0",
+    "wait-on": "^8.0.3"
+  },
+  "name": "se-amex",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AliKory/Se-aMex.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AliKory/Se-aMex/issues"
+  },
+  "homepage": "https://github.com/AliKory/Se-aMex#readme"
+}

@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<title>SeñaMex</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<link href="css/login.css" rel="stylesheet" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+	<link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+</head>
+
+<body>
+	<!--LOGIN-->
+	<div class="form-container container">
+		<div class="form-container login-container">
+			<form name="login_form" id="login_form" method="post" action="#" enctype="multipart/form-data">
+				<h1>Ingresar</h1>
+				<input type="text" name="login_email" id="login_email" class="form-control" placeholder="Email"
+					autofocus>
+				<input type="password" name="login_password" id="login_password" class="form-control"
+					placeholder="Contraseña">
+				<div class="content">
+				</div>
+				<button type="button" id="login" name="login" class="button">
+					Ingresar
+					<div class="hoverEffect">
+						<div></div>
+					</div>
+				</button>
+			</form>
+		</div>
+
+		<!--Overlay Login-->
+		<div class="overlay-container">
+			<div class="overlay">
+				<div class="overlay-panel overlay-left">
+					<h1 class="title">Hello <br> friends</h1>
+					<p>if You have an account, login here and have fun</p>
+					<button class="ghost" id="login">Login
+						<i class="lni lni-arrow-left login"></i>
+					</button>
+				</div>
+
+				<!--Overlay Register-->
+				<div class="overlay-panel overlay-right">
+					<form name="registration_form" id="registration_form" method="post" action="#"
+						enctype="multipart/form-data" style="position: relative; background-color: transparent;">
+						<h1 class="title">¿Eres <br> nuevo?</h1>
+						<p>Crea una cuenta y se parte de la comunidad SeñaMex</p>
+						<input type="text" name="email" id="email" class="form-control" placeholder="Email" autofocus>
+						<input type="password" name="password" id="password" class="form-control"
+							placeholder="Contraseña">
+						<button class="ghost" type="button" id="register" name="register" class="btn btn-success">
+							<div class="pass-link">
+								<a>Registrarse
+							</div>
+						</button>
+					</form>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+	</div>
+</body>
+<script type="module">
+	import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+	import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
+	import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+
+	const mensajesError = {
+		'auth/invalid-email': 'El correo electrónico no es válido.',
+		'auth/user-not-found': 'No se encontró ningún usuario con ese correo electrónico.',
+		'auth/wrong-password': 'La contraseña es incorrecta.',
+		'auth/weak-password': 'La contraseña es demasiado débil.',
+		'auth/email-already-in-use': 'El correo electrónico ya está en uso.',
+		'auth/credential-already-in-use': 'La credencial ya está en uso.',
+		'auth/too-many-requests': 'Demasiados intentos de inicio de sesión. Vuelva a intentarlo en un minuto.',
+		'auth/user-disabled': 'El usuario está deshabilitado.',
+		'auth/operation-not-allowed': 'No se permite esta operación.',
+		'auth/network-request-failed': 'Error de red. Verifique su conexión a Internet.',
+		'auth/invalid-login-credentials': 'Contraseña incorrecta'
+	};
+
+	const firebaseConfig = {
+		apiKey: "AIzaSyBknoUA41xzCGhz4Mk0YN0RmWp5RXqnNgw",
+		authDomain: "senamex-6d7dc.firebaseapp.com",
+		projectId: "senamex-6d7dc",
+		storageBucket: "senamex-6d7dc.appspot.com",
+		messagingSenderId: "490041619761",
+		appId: "1:490041619761:web:11a6fb6f80dc530b606c10",
+		measurementId: "G-BB892N8GHX"
+	};
+
+	const app = initializeApp(firebaseConfig);
+	const analytics = getAnalytics(app);
+	const auth = getAuth();
+	console.log(app);
+
+	// Función para proteger rutas
+	export function protectRoute(redirectTo = "login.html") {
+		onAuthStateChanged(auth, (user) => {
+			if (!user) {
+				// Usuario no autenticado: redirigir a login
+				window.location.href = redirectTo;
+			}
+			// Si hay usuario, la página carga normalmente
+		});
+	}
+
+	document.getElementById("register").addEventListener("click", function () {
+		var email = document.getElementById("email").value;
+		var password = document.getElementById("password").value;
+
+		createUserWithEmailAndPassword(auth, email, password)
+			.then((userCredential) => {
+				Swal.fire({
+					icon: 'success',
+					title: '¡Registrado correctamente!',
+					text: 'Usuario registrado con éxito.',
+					iconColor: '#007bff',
+					confirmButtonText: 'Aceptar',
+					confirmButtonColor: '#7b57ff',
+					background: '#f8f9fa',
+					color: '#343a40',
+					customClass: {
+						container: 'mi-alerta'
+					},
+					didOpen: () => {
+						document.querySelector('.swal2-x-mark').style.transform = 'translate(-50%, -50%)';
+					}
+				});
+			})
+			.catch((error) => {
+				console.log(error);
+				const errorCode = error.code;
+				const errorMessage = mensajesError[errorCode] || 'Ha ocurrido un error inesperado.';
+				Swal.fire({
+					icon: 'warning',
+					title: 'Lo sentimos',
+					text: errorMessage,
+					customClass: {
+						icon: 'mi-alerta'
+					},
+					didOpen: () => {
+						document.querySelector('.swal2-x-mark').style.transform = 'translate(-50%, -50%)';
+					}
+				});
+			});
+	}); // <-- AQUÍ SE CIERRA EL REGISTER
+
+	// Animación de entrada al cargar la página
+	window.addEventListener('DOMContentLoaded', () => {
+		const entranceAnimationDiv = document.createElement('div');
+		entranceAnimationDiv.classList.add('entrance-animation');
+		document.body.appendChild(entranceAnimationDiv);
+
+		// Eliminar la animación de entrada después de que termine
+		setTimeout(() => {
+			entranceAnimationDiv.remove();
+		}, 2500); // Duración de la animación de entrada
+	});
+
+	// Animación de salida al redirigir después del inicio de sesión
+	document.getElementById("login").addEventListener("click", function () {
+		var email = document.getElementById("login_email").value;
+		var password = document.getElementById("login_password").value;
+
+		signInWithEmailAndPassword(auth, email, password)
+			.then((userCredential) => {
+				const user = userCredential.user;
+
+				// Animación de salida
+				const exitAnimationDiv = document.createElement('div');
+				exitAnimationDiv.classList.add('exit-animation');
+				document.body.appendChild(exitAnimationDiv);
+
+				// Redirigir después de que termine la animación de salida
+				setTimeout(() => {
+					//exitAnimationDiv.remove(); // Eliminar la animación de salida
+					window.location.href = 'inicio.html';
+				}, 2500); // Duración de la animación de salida
+			})
+			.catch((error) => {
+				const errorCode = error.code;
+				const errorMessage = mensajesError[errorCode] || 'Ha ocurrido un error inesperado.';
+				Swal.fire({
+					icon: 'warning',
+					title: 'Lo sentimos',
+					text: errorMessage,
+					customClass: {
+						icon: 'mi-alerta'
+					},
+					didOpen: () => {
+						document.querySelector('.swal2-x-mark').style.transform = 'translate(-50%, -50%)';
+					}
+				});
+			});
+	});
+</script>

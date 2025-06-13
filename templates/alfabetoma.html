@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>SeñaMex</title>
+  <!-- Favicon-->
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  <!-- Custom Google font-->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"
+    rel="stylesheet" />
+  <!-- Bootstrap icons-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+  <!-- Core theme CSS (includes Bootstrap)-->
+  <link href="/css/styles_alfabeto.css" rel="stylesheet" />
+  <script src="http://localhost:3000/socket.io/socket.io.min.js" defer></script>
+  <script src="/js/scriptm.js" defer></script>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container_navbar">
+            <div class="nav_logo">
+                <a class="brand" href="/inicio.html">
+                    <span class="logo">SeñaMex</span>
+                </a>
+            </div>
+            <div class="nav-items">
+                <a href="/inicio.html" class="nav-link">Inicio</a>
+                <a href="alfabetoma.html" class="nav-link active">Alfabeto</a>
+                <a href="deletreo.html" class="nav-link">Deletreo</a>
+                <a href="proyecto.html" class="nav-link">Proyecto</a>
+                <a href="contacto.html" class="nav-link">Equipo</a>
+                <a href="./index.html" class="nav-link logout">Salir</a>
+            </div>
+        </div>
+    </nav>
+    <div class="hero">
+
+    
+
+    <div class="main-container">
+        <div class="text-content">
+            <h1>APRENDE EL ALFABETO</h1>
+            
+            <p class="description">
+                Mejora la interacción entre las personas sordas o con problemas de audición, recuerda el abecedario
+            </p>
+            
+            <div class="lsm-tag">Lenguaje de Señas Mexicano</div>
+        </div>
+        
+        <div class="card-content">
+            <div class="interactive-card">
+                <h2 class="card-title">Busca una letra</h2>
+                
+                <div class="input-group">
+                    <input type="text" id="letraInput" placeholder="Ingresa una letra del abecedario"
+                        class="form-control">
+                </div>
+                
+                <div class="sign-image-container">
+                    <div id="imagenContenedor"></div>
+                      <a class="btn btn-primary" href="./alfabeto.html"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Menú hamburguesa
+    const hamburger = document.createElement('div');
+    hamburger.className = 'hamburger';
+    hamburger.innerHTML = `
+        <span></span>
+        <span></span>
+        <span></span>
+    `;
+    
+    const navbar = document.querySelector('.container_navbar');
+    const navItems = document.querySelector('.nav-items');
+    
+    // Insertar hamburguesa antes de los nav-items
+    navbar.insertBefore(hamburger, navItems);
+    
+    // Toggle del menú
+    hamburger.addEventListener('click', function() {
+        this.classList.toggle('active');
+        navItems.classList.toggle('active');
+    });
+    
+    // Cerrar menú al hacer clic en un enlace
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function() {
+            hamburger.classList.remove('active');
+            navItems.classList.remove('active');
+        });
+    });
+    </script>
+</body>
+</html>

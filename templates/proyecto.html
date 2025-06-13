@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <title>SeñaMex</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Custom Google font-->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="../css/styles_proyecto.css" rel="stylesheet" />
+    </head>
+    <body>
+        
+        <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container_navbar">
+            <div class="nav_logo">
+                <a class="brand" href="/inicio.html">
+                    <span class="logo">SeñaMex</span>
+                </a>
+            </div>
+            <div class="nav-items">
+                <a href="/inicio.html" class="nav-link">Inicio</a>
+                <a href="alfabetoma.html" class="nav-link">Alfabeto</a>
+                <a href="deletreo.html" class="nav-link">Deletreo</a>
+                <a href="proyecto.html" class="nav-link active">Proyecto</a>
+                <a href="contacto.html" class="nav-link">Equipo</a>
+                <a href="./index.html" class="nav-link logout">Salir</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <main class="project-about">
+    <!-- Contenido principal -->
+    <div class="container">
+        <!-- Título -->
+        <div class="section-header">
+            <h1>Sobre el <span class="highlight">proyecto</span></h1>
+            <h3>Cerrando la brecha comunicativa para personas sordas</h3>
+        </div>
+            
+
+        <div class="content-wrapper">
+            <!-- Contenedor de cards -->
+            <div class="cards-container">
+                <!-- Tarjeta Objetivo -->
+                <div class="project-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="bi bi-bullseye"></i>
+                        </div>
+                        <h2>Objetivo del proyecto</h2>
+                    </div>
+                    <div class="card-content">
+                        <p>Desarrollar un prototipo inteligente que facilite la comunicación entre personas que usan lenguaje de señas y personas oyentes. Mediante el uso de una Raspberry Pi, una cámara de video y una aplicación móvil, buscamos eficientar y facilitar la comunicación.</p>
+                    </div>
+                </div>
+
+                <!-- Tarjeta Problema -->
+                <div class="project-card problem-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="bi bi-exclamation-triangle"></i>
+                        </div>
+                        <h2>El problema</h2>
+                    </div>
+                    <div class="card-content">
+                        <p>La problemática central identificada es la dificultad de comunicación que enfrentan las personas con discapacidad auditiva en su interacción diaria con el entorno oyente. Las barreras incluyen la falta de conocimiento general del lenguaje de señas y la escasez de intérpretes calificados.</p>
+                    </div>
+                    <!--<a href="./solucion.html" class="solution-btn">Nuestra Solución <i class="bi bi-arrow-right"></i></a>-->
+                </div>
+            </div>
+
+            <!-- Imagen al lado derecho -->
+            <div class="ls-image-container">
+                <img src="/assets/ls.png" alt="Ilustración Lenguaje de Señas" class="ls-image">
+            </div>
+        </div>
+    </div>
+</main>
+    </div>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+        <script>
+        // Menú hamburguesa
+    const hamburger = document.createElement('div');
+    hamburger.className = 'hamburger';
+    hamburger.innerHTML = `
+        <span></span>
+        <span></span>
+        <span></span>
+    `;
+    
+    const navbar = document.querySelector('.container_navbar');
+    const navItems = document.querySelector('.nav-items');
+    
+    // Insertar hamburguesa antes de los nav-items
+    navbar.insertBefore(hamburger, navItems);
+    
+    // Toggle del menú
+    hamburger.addEventListener('click', function() {
+        this.classList.toggle('active');
+        navItems.classList.toggle('active');
+    });
+    
+    // Cerrar menú al hacer clic en un enlace
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function() {
+            hamburger.classList.remove('active');
+            navItems.classList.remove('active');
+        });
+    });
+    </script>
+    </body>
+</html>
