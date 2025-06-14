@@ -18,4 +18,4 @@ pillow
 requests
 soupsieve
 tqdm
-mediapipe
+mediapipe==0.9.1.0
