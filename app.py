@@ -1,4 +1,5 @@
-from flask import Flask, render_template, jsonify, request, url_for
+import os
+from flask import Flask, render_template, jsonify, request, send_from_directory, url_for
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -9,6 +10,37 @@ from flask_cors import CORS
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
 CORS(app)
+
+# Configuración para servir archivos estáticos desde las carpetas existentes
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory('static', filename)
+
+@app.route('/assets/<path:filename>')
+def assets_files(filename):
+    return send_from_directory('assets', filename)
+
+@app.route('/js/<path:filename>')
+def js_files(filename):
+    return send_from_directory('js', filename)
+
+@app.route('/css/<path:filename>')
+def css_files(filename):
+    return send_from_directory('css', filename)
+
+# Rutas principales
+@app.route('/')
+def home():
+    return send_from_directory('.', 'index.html')
+
+@app.route('/inicio.html')
+def inicio():
+    return send_from_directory('.', 'inicio.html')
+
+# Rutas para las secciones (manteniendo tu estructura actual)
+@app.route('/templates/<template_name>')
+def templates(template_name):
+    return send_from_directory('templates', template_name)
 
 # Cargar modelos
 #Modelo Abecedario
@@ -64,35 +96,35 @@ modelpe = modelpe_dict['model']
 #Etiquetas del modelo Abecedario
 labels_dict = {0:'a',1:'b',2:'c',3:'d',4:'e',5:'f',6:'g',7:'h',8:'i',9:'j',10:'k',11:'l',12:'ll',13:'m',14:'n',15:'ñ',16:'o',17:'p',18:'q',19:'r',20:'rr',21:'s',22:'t',23:'u',24:'v',25:'w',26:'x',27:'y',28:'z'}
 #Etiquetas del modelo Saludos
-labels_dicts = { 0: 'Hola', 1: 'Buenos dias', 2: 'Buenas tardes', 3: 'Buenas noches', 4: '¿Como estas?',}
+labels_dicts = { 0: 'Hola', 1: 'Buenos días', 2: 'Buenas tardes', 3: 'Buenas noches', 4: '¿Cómo estás?'}
 #Etiquetas del modelo Emociones
 labels_dictr = { 0: 'Bien',  1: 'Mal',  2: 'Más o menos',  3: 'Enojado',  4: 'Triste',  5: 'Serio',  6: 'Apenado',  7: 'Contento',  8: 'Feliz',  9: 'Molesto', 10: 'Hambriento',  11: 'Bailarín',  12: 'Malo',  13: 'Bueno',  14: 'Alegre',  15: 'Llorar' }
 #Etiquetas del modelo Presentación
 labels_dictp = { 0: 'Nombre',  1: 'Seña'}
 #Etiquetas del modelo Negación y Existencia
-labels_dictn = { 0: 'No sé',  1: 'Nada/ De nada',  2: 'Nadie',  3: 'No hay',  4: 'No necesito'}
+labels_dictn = { 0: 'No sé',  1: 'Nada / De nada',  2: 'Nadie',  3: 'No hay',  4: 'No necesito'}
 #Etiquetas del modelo Ubicación
-labels_dictu = { 0: '¿Donde?',  1: 'Lugar',  2: 'Ciudad',  3: '¿Donde vives?',  4: 'Escuela',  5: 'Salón',  6: 'Salir'}
+labels_dictu = { 0: '¿Dónde?',  1: 'Lugar',  2: 'Ciudad',  3: '¿Dónde vives?',  4: 'Escuela',  5: 'Salón',  6: 'Salir'}
 #Etiquetas del modelo Problemas
 labels_dictps = {0:'Emergencia',1:'Cuidado',2:'Peligro',3:'Problema',4:'Accidente',5:'Culpa',6:'Sucio',7:'Basura',8:'No sirve',9:'Memoria',10:'Descompuesto',11:'Reparar',12:'Prohibido',13:'Error'}
 # Etiquetas del modelo Estados de Ánimo
 labels_dictes = {0:'Tranquilo', 1:'Distraído', 2:'Confianza', 3:'Confundido', 4:'Sentir', 5:'Quiero', 6:'No quiero', 7:'Mejor', 8:'Peor', 9:'Grave', 10:'Me siento débil'}
 #Etiquetas del modelo Conducta
-labels_dictc = {0:'Regañar', 1:'Castigar', 2: 'Obedecer', 3: 'Travieso', 4: 'Educado', 5: 'Responsable', 6: 'Respeto', 7: 'Tramposo', 8: 'No hagas caso', 9: 'Grosero', 10: 'Burla', 11: 'Criticar', 12: 'Evitar', 13: 'Participar', 14: 'Levantar la mano', 15: 'Permiso', 16: 'Quitar', 17: 'Ni modo', 18: 'Aguantate', 19: 'Reglas', 20: 'Fila', 21: 'Silencio', 22: 'Callate', 23: 'Necio', 24: 'No gritar', 25: 'Siéntate', 26: 'Ponte de pie', 27: 'No correr', 28: 'No empujar', 29: 'Pelear/golpear', 30: 'Bullying', 31: 'Perdón', 32: 'Disculpa', 33: 'Ya!'}
+labels_dictsb = {0:'Enfermo', 1:'Gripe', 2:'Báñate', 3:'Desayuna', 4:'Almuerzo', 5:'Come'}
 #Etiquetas del modelo Salud y Bienestar
-labels_dictsb = {0:'Enfermo', 1:'Gripa', 2:'Bañate', 3:'Desayunar', 4:'Almuerzo',5:'Comer'}
+labels_dictsb = {0:'Enfermo', 1:'Gripe', 2:'Báñate', 3:'Desayuna', 4:'Almuerzo', 5:'Come'}
 #Etiquetas del modelo Familia
-labels_dictf = {0: 'Mamá', 1: 'Papá', 2: 'Maestro', 3: 'Maestra', 4: 'Director', 5: 'Directora', 6: 'Jefe', 7: 'Abuelo', 8: 'Abuela', 9: 'Tío', 10: 'Tia', 11: 'Primo', 12: 'Prima', 13: 'Hermano', 14: 'Hermana', 15: 'Amigo', 16: 'Amiga', 17: 'Novio', 18: 'Vecino', 19: 'Vecina'}
+labels_dictf = {0: 'Mamá', 1: 'Papá', 2: 'Maestro', 3: 'Maestra', 4: 'Director', 5: 'Directora', 6: 'Jefe', 7: 'Abuelo', 8: 'Abuela', 9: 'Tío', 10: 'Tía', 11: 'Primo', 12: 'Prima', 13: 'Hermano', 14: 'Hermana', 15: 'Amigo', 16: 'Amiga', 17: 'Novio', 18: 'Vecino', 19: 'Vecina'}
 #Etiquetas del modelo Comunicación
-labels_dictcel = {0: 'Atención', 1: 'Fijate', 2: 'Mentira/mentiroso', 3: 'Verdad', 4: 'Falso..', 5: 'Dime', 6: 'Estar de acuerdo', 7: '¿Puedo?', 8: 'No puedo', 9: 'Basta!', 10: 'Pregunta', 11: 'Tu pregunta', 12: 'A mi pregúntame', 13: 'A todos le preguntarée', 14: '¿Si me entendiste?', 15: 'No entendiste', 16: 'Avisar', 17: 'Engañar'}
+labels_dictcel = {0: 'Atención', 1: 'Fíjate', 2: 'Mentira', 3: 'Verdad', 4: 'Falso', 5: 'Dime', 6: 'Estar de acuerdo', 7: '¿Puedo?', 8: 'No puedo', 9: 'Basta!', 10: 'Pregunta', 11: 'Tu pregunta', 12: 'A mí pregúntame', 13: 'A todos le preguntar é', 14: '¿Sí me entendiste?', 15: 'No entediste', 16: 'Avisar', 17: 'Engañar'}
 #Etiquetas del modelo tiempo
-labels_dictt = {0: '¿Cuándo?', 1: '¿Cuántos?', 2: 'Tiempo', 3: 'Tarde', 4: 'Poco', 5: 'Mucho', 6: 'Menos', 7: 'Otra vez/repetir', 8: 'Otro'}
+labels_dictt = {0: '¿Cuándo?', 1: '¿Cuántos?', 2: 'Tiempo', 3: 'Tarde', 4: 'Poco', 5: 'Mucho', 6: 'Menos', 7: 'Otra vez / Repetir', 8: 'Otro'}
 #Etiquetas del modelo verbos
-labels_dictv = {0: 'Guardar cosas', 1: 'Ordena/organiza', 2: 'Limpiar', 3: 'Ver', 4: 'Mira', 5: 'Decir', 6: 'Recordar', 7: 'Olvidar', 8: 'Hablar', 9: 'Platicar', 10: 'Aprender', 11: 'Enseñar', 12: 'Bailar', 13: 'Tarea', 14: 'Estudiar', 15: 'Pensar', 16: 'Saber', 17: 'Hacer', 18: 'Usar', 19: 'Trabajar', 20: 'Dormir', 21: 'Despertar', 22: 'Prestar'}
+labels_dictv = {0: 'Guardar cosas', 1: 'Ordena / Organiza', 2: 'Limpiar', 3: 'Ver', 4: 'Mira', 5: 'Decir', 6: 'Recordar', 7: 'Olvidar', 8: 'Hablar', 9: 'Platicar', 10: 'Aprender', 11: 'Enseñar', 12: 'Bailar', 13: 'Tarea', 14: 'Estudiar', 15: 'Pensar', 16: 'Saber', 17: 'Hacer', 18: 'Usar', 19: 'Trabajar', 20: 'Dormir', 21: 'Despertar', 22: 'Prestar'}
 #Etiquetas del modelo Descripcion
-labels_dictdc = {0:'Feo', 1:'Bonito', 2:'Tu ropa Sucia', 3:'Tu ropa limpia', 4:'Bien', 5:'Mal', 6:'Me gusta',7:'No me gusta' ,8:'Lento', 9:'Rapido'}
+labels_dictdc = {0:'Feo', 1:'Bonito', 2:'Tu ropa sucia', 3:'Tu ropa limpia', 4:'Bien', 5:'Mal', 6:'Me gusta', 7:'No me gusta', 8:'Lento', 9:'Rápido'}
 #Etiquetas del modelo Preguntas
-labelspe_dict = {0:'¿Qué haces?', 1:'¿Para?', 2:'¿Para qué?', 3:'¿Por qué?', 4:'¿Qué pasó?', 5:'¿Cómo?', 6:'¿Qué significa?', 7:'¿Qué necesitas?'}
+labelspe_dict = {0:'¿Qué haces?', 1:'¿Para qué?', 2:'¿Por qué?', 3:'¿Qué pasó?', 4:'¿Cómo?', 5:'¿Qué significa?', 6:'¿Qué necesitas?'}
 
 # Configuración de MediaPipe
 mp_hands = mp.solutions.hands
@@ -107,14 +139,14 @@ negation_videos = ['no_se.mp4', 'nada.mp4', 'nadie.mp4', 'no_hay.mp4', 'no_neces
 location_videos = ['donde.mp4', 'lugar.mp4', 'ciudad.mp4', 'donde_vives.mp4', 'escuela.mp4', 'salon.mp4', 'salir.mp4']
 problem_videos = ['emergencia.mp4', 'cuidado.mp4', 'peligro.mp4', 'problema.mp4', 'accidente.mp4', 'culpa.mp4', 'sucio.mp4', 'basura.mp4', 'no_sirve.mp4', 'memoria.mp4', 'descompuesto.mp4', 'reparar.mp4', 'prohibido.mp4', 'error.mp4']
 moods_videos = ['tranquilo.mp4', 'distraído.mp4', 'confianza.mp4', 'confundido.mp4', 'sentir.mp4', 'quiero.mp4', 'no_quiero.mp4', 'mejor.mp4', 'peor.mp4', 'grave.mp4', 'me_siento_débil.mp4']
-conduct_videos = ['regañar.mp4', 'castigar.mp4', 'obedecer.mp4', 'travieso.mp4', 'educado.mp4', 'responsable.mp4', 'respeto.mp4', 'tramposo.mp4', 'no_hagas_caso.mp4', 'grosero.mp4', 'burla.mp4', 'criticar.mp4', 'evitar.mp4', 'participar.mp4', 'levantar_la_mano.mp4', 'permiso.mp4', 'quitar.mp4', 'ni_modo.mp4', 'aguantate.mp4', 'reglas.mp4', 'fila.mp4', 'silencio.mp4', 'callate.mp4', 'necio.mp4', 'no_gritar.mp4', 'sientate.mp4', 'ponte_de_pie.mp4', 'no_correr.mp4', 'no_empujar.mp4','pelear.mp4','bullying.mp4','perdon.mp4','disculpa.mp4','ya_mp4']
+conduct_videos = ['regañar.mp4', 'castigar.mp4', 'obedecer.mp4', 'travieso.mp4', 'educado.mp4', 'responsable.mp4', 'respeto.mp4', 'tramposo.mp4', 'no_hagas_caso.mp4', 'grosero.mp4', 'burla.mp4', 'criticar.mp4', 'evitar.mp4', 'participar.mp4', 'levantar_la_mano.mp4', 'permiso.mp4', 'quitar.mp4', 'ni_modo.mp4', 'aguantate.mp4', 'reglas.mp4', 'fila.mp4', 'silencio.mp4', 'callate.mp4', 'necio.mp4', 'no_gritar.mp4', 'sientate.mp4', 'ponte_de_pie.mp4', 'no_correr.mp4', 'no_empujar.mp4','pelear.mp4','bullying.mp4','perdon.mp4','disculpa.mp4','ya.mp4']
 health_videos = ['enfermo.mp4', 'gripa.mp4', 'banate.mp4', 'desayunar.mp4', 'almuerzo.mp4', 'comer.mp4']
 family_videos = ['mama.mp4', 'papa.mp4', 'maestro.mp4', 'maestra.mp4', 'director.mp4', 'directora.mp4', 'jefe.mp4', 'abuelo.mp4', 'abuela.mp4', 'tio.mp4', 'tia.mp4', 'primo.mp4', 'prima.mp4', 'hermano.mp4', 'hermana.mp4', 'amigo.mp4', 'amiga.mp4', 'novio.mp4', 'vecino.mp4', 'vecina.mp4']
 comunication_videos = ['atencion.mp4', 'fijate.mp4', 'mentira.mp4', 'verdad.mp4', 'falso.mp4', 'dime.mp4', 'estar_de_acuerdo.mp4', 'puedo.mp4', 'no_puedo.mp4', 'basta.mp4', 'pregunta.mp4', 'tu_pregunta.mp4', 'a_mi_preguntame.mp4', 'a_todos_le_preguntare.mp4', 'si_me_entendiste.mp4', 'no_entendiste.mp4', 'avisar.mp4', 'enganar.mp4']
 time_videos = ['cuando.mp4', 'cuantos.mp4', 'tiempo.mp4', 'tarde.mp4', 'poco.mp4', 'mucho.mp4', 'menos.mp4', 'otra_vez.mp4', 'otro.mp4']
 verbs_videos = ['guardar_cosas.mp4', 'ordena_organizar.mp4', 'limpiar.mp4', 'ver.mp4', 'mira.mp4', 'decir.mp4', 'recordar.mp4', 'olvidar.mp4', 'hablar.mp4', 'platicar.mp4', 'aprender.mp4', 'enseñar.mp4', 'bailar.mp4', 'tarea.mp4', 'estudiar.mp4', 'pensar.mp4', 'saber.mp4', 'hacer.mp4', 'usar.mp4', 'trabajar.mp4', 'dormir.mp4', 'despertar.mp4', 'prestar.mp4']
 description_videos = ['feo.mp4', 'bonito.mp4', 'tu_ropa_sucia.mp4', 'tu_ropa_limpia.mp4', 'bien.mp4', 'mal.mp4', 'me_gusta.mp4', 'no_me_gusta.mp4', 'lento.mp4', 'rapido.mp4']
-questions_videos = ['que_haces.mp4', 'para.mp4', 'para_que.mp4', 'por_que.mp4', 'que_paso.mp4', 'como.mp4', 'que_significa.mp4', 'que_necesitas.mp4']
+questions_videos = ['que_haces.mp4', 'para.mp4', 'para_qué.mp4', 'por_qué.mp4', 'qué_pasó.mp4', 'cómo.mp4', 'qué_significa.mp4', 'qué_needas.mp4']
 
 # Obtener índices válidos
 valid_indices = list(range(len(sign_images)))
@@ -157,6 +189,10 @@ current_description_index = 0
 current_question_index = 0
 
 # Inicializar variables para videos de presentación
+@app.route('/gestos/recomendaciones')
+def gestos_recomendaciones():
+    return render_template('recomendaciones.html')
+
 @app.route('/gestos')
 def gestos():
     return render_template('deteccion.html')
@@ -851,4 +887,5 @@ def process_prediction(model_used, labels):
         return jsonify({'prediction': f'Error: {str(e)}'})
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    port = int(os.environ.get('PORT', 10000))
+    app.run(host='0.0.0.0', port=port)

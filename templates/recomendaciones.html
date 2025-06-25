@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>SeñasMex IA</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Custom Google font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="../css/styles_recomendaciones.css" rel="stylesheet" />
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <title>Detección de Gestos</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container_navbar">
+                <div class="nav_logo">
+                    <a class="brand" href="/inicio.html">
+                        <span class="logo">SeñasMex IA</span>
+                    </a>
+                </div>
+                <div class="nav-items">
+                    <a href="/inicio.html" class="nav-link">Inicio</a>
+                    <a href="/templates/alfabetoma.html" class="nav-link">Alfabeto</a>
+                    <a href="/templates/deletreo.html" class="nav-link">Deletreo</a>
+                    <a href="/templates/proyecto.html" class="nav-link">Proyecto</a>
+                    <a href="/templates/contacto.html" class="nav-link">Equipo</a>
+                    <a href="./index.html" class="nav-link logout">Salir</a>
+                </div>
+            </div>
+        </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul>
+            <li><a href="#" class="active">Recomendaciones</a></li>
+            <li><a href="/gestos">Abecedario</a></li>
+            <li><a href="/gestos/saludos">Saludos</a></li>
+            <li><a href="/gestos/emociones">Emociones</a></li>
+            <li><a href="/gestos/presentacion">Presentación</a></li>
+            <li><a href="/gestos/negacion">Negación y Existencia</a></li>
+            <li><a href="/gestos/ubicacion">Ubicación</a></li>
+            <li><a href="/gestos/problemas">Problemas y Situaciones</a></li>
+            <li><a href="/gestos/estadosanimo">Estados de Ánimo</a></li>
+            <li><a href="/gestos/conducta">Conducta y Comportamiento</a></li> 
+            <li><a href="/gestos/salud">Salud y Bienestar</a></li>
+            <li><a href="/gestos/familia">Familia y Relaciones</a></li>
+            <li><a href="/gestos/comunicacion">Comunicación e Interacción</a></li>
+            <li><a href="/gestos/tiempo">Tiempo y Cantidad</a></li>
+            <li><a href="/gestos/verbos">Acciones y Verbos</a></li>
+            <li><a href="/gestos/descripcion">Descripción y Calidad</a></li>
+            <li><a href="/gestos/preguntas">Preguntas Específicas</a></li>
+        </ul>
+    </div>
+
+    <div class="hero">
+         <div class="cards-container">
+        <div class="card">
+            <div class="card-title">Fondo</div>
+            <div class="card-content">
+                Utiliza un fondo sencillo y de color uniforme para facilitar el reconocimiento de tus señas. Evita fondos con patrones o texturas que puedan distraer o confundir al sistema.
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">Movimientos</div>
+            <div class="card-content">
+                Evita movimientos bruscos o rápidos. Realiza cada seña de manera pausada y clara, permitiendo que el sistema pueda captar adecuadamente cada movimiento.
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">Manos</div>
+            <div class="card-content">
+                Asegúrate de tener las manos limpias y sin joyería. Objetos como anillos o pulseras pueden interferir con el reconocimiento de las señas.
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">Vestimenta</div>
+            <div class="card-content">
+                Usa una prenda de color oscuro para facilitar el reconocimiento. El contraste entre tus manos y la ropa ayuda al sistema a distinguir mejor tus movimientos.
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">Cabello</div>
+            <div class="card-content">
+                Si tienes el cabello largo, es recomendable tenerlo atado. Esto evita que el cabello interfiera con el reconocimiento facial o de las manos.
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">Señas</div>
+            <div class="card-content">
+                Concéntrate en realizar la seña de manera clara y pausada. Cada movimiento debe ser distintivo y completo para una mejor interpretación.
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">Confirmación</div>
+            <div class="card-content">
+                Espera a que la pantalla confirme el reconocimiento antes de continuar. Esto asegura que cada seña ha sido correctamente interpretada por el sistema.
+            </div>
+        </div>
+    </div>
+    </div>
+  </div>
+
+
+    </div>
+</body>

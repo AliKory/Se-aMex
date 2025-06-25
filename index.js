@@ -30,6 +30,10 @@ pyProc.on('message', function (message) {
 });
 
 // Ruta para la vista de gestos
+app.get('/gestos/recomendaciones', (req, res) => {
+    res.sendFile(path.join(__dirname, 'templates/recomendaciones.html'))
+});
+
 app.get('/gestos', (req, res) => {
     res.sendFile(path.join(__dirname, 'templates/deteccion.html'));
 });

@@ -130,7 +130,7 @@
         .catch(err => console.error('Error accessing camera:', err));
 
     function skipToNextVideo() {
-        fetch('http://localhost:5000/gestos/estadosanimo/skip', {
+        fetch('/gestos/estadosanimo/skip', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -148,44 +148,51 @@
     }
 
     function loadNewVideo() {
-        fetch('http://localhost:5000/gestos/estadosanimo/get_current_video')  // Corregido el endpoint
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    const targetVideo = document.getElementById('targetVideo');
-                    targetVideo.src = data.video_url;
-                    targetLabel.textContent = data.target;
+    fetch('/gestos/estadosanimo/get_current_video')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const targetVideo = document.getElementById('targetVideo');
+                const targetLabel = document.getElementById('targetLabel');
+                targetVideo.src = data.video_url;
+                targetLabel.textContent = data.target;
 
-                    // Reproducir el video automáticamente
-                    targetVideo.play();
+                // Reproducir el video automáticamente
+                targetVideo.play();
 
-                    // Obtener el audio
-                    const audioName = data.target;
-                    const audioPath = `/assets/audio/mood/${audioName}.mp3`;
+                // Obtener el audio
+                const audioName = data.target;
+                const baseAudioPath = `/assets/audio/moods/${audioName}`;
+                let audioElement = new Audio(`${baseAudioPath}.mp3`);
 
-
-                    // Crear un elemento audio
-                    const audioElement = new Audio(audioPath);
-
-                    // Manejar errores
+                // Si falla el .mp3, intenta con .m4a
+                audioElement.onerror = () => {
+                    console.warn(`.mp3 no disponible, intentando con .m4a`);
+                    audioElement = new Audio(`${baseAudioPath}.m4a`);
                     audioElement.onerror = () => {
-                        console.error('Error al cargar el audio:', audioPath);
+                        console.error('Error: No se pudo cargar ni .mp3 ni .m4a');
                     };
+                    audioElement.play().catch(error =>
+                        console.error('Error al reproducir audio .m4a:', error)
+                    );
+                };
 
-                    // Reproducir el audio
-                    audioElement.play().catch(error => console.error('Error al reproducir audio:', error));
-                } else {
-                    console.error('Error al cargar el video:', data.message);
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    }
+                audioElement.play().catch(error =>
+                    console.error('Error al reproducir audio .mp3:', error)
+                );
+
+            } else {
+                console.error('Error al cargar el video:', data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
 
     function captureFrame() {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageData = canvas.toDataURL('image/jpeg');
 
-        fetch('http://localhost:5000/gestos/estadosanimo/predict', {  // Corregido el endpoint
+        fetch('/gestos/estadosanimo/predict', {  // Corregido el endpoint
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

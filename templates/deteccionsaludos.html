@@ -128,7 +128,7 @@
         .catch(err => console.error('Error accessing camera:', err));
 
     function skipToNextVideo() {
-        fetch('http://localhost:5000/gestos/saludos/skip', {  // Endpoint para videos
+        fetch('/gestos/saludos/skip', {  // Endpoint para videos
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -146,7 +146,7 @@
     }
 
     function loadNewVideo() {
-        fetch('http://localhost:5000/gestos/saludos/get_current_video')  // Endpoint para videos
+        fetch('/gestos/saludos/get_current_video')  // Endpoint para videos
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
@@ -157,9 +157,16 @@
                     // Reproducir el video automáticamente
                     targetVideo.play();
 
-                    // Obtener el audio
-                    const audioName = data.target;
-                    const audioPath = `/assets/audio/greetings/${audioName}.mp3`;
+                    // Obtener el nombre limpio del audio
+                    let audioName = data.target;
+
+                    // Si comienza con ¿ y termina con ?, extraer solo el contenido interno
+                    const match = audioName.match(/^¿(.+)\?$/);
+                    if (match) {
+                        audioName = match[1];
+                    }
+
+                    const audioPath = `/assets/audio/greetings/${audioName}`;
 
                     // Crear un elemento audio
                     const audioElement = new Audio(audioPath);
@@ -168,7 +175,7 @@
                     audioElement.onerror = () => {
                         console.error('Error al cargar el audio:', audioPath);
                     };
-
+                    
                     // Reproducir el audio
                     audioElement.play().catch(error => console.error('Error al reproducir audio:', error));
                 } else {
@@ -182,7 +189,7 @@
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageData = canvas.toDataURL('image/jpeg');
 
-        fetch('http://localhost:5000/gestos/saludos/predict', {  // Endpoint para videos
+        fetch('/gestos/saludos/predict', {  // Endpoint para videos
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -127,7 +127,7 @@
         .catch(err => console.error('Error accessing camera:', err));
 
     function skipToNextVideo() {
-        fetch('http://localhost:5000/gestos/descripcion/skip', {
+        fetch('/gestos/descripcion/skip', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -145,7 +145,7 @@
     }
 
     function loadNewVideo() {
-        fetch('http://localhost:5000/gestos/descripcion/get_current_video')  // Corregido el endpoint
+        fetch('/gestos/descripcion/get_current_video')  // Corregido el endpoint
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
@@ -158,7 +158,7 @@
 
                     // Obtener el audio
                     const audioName = data.target;
-                    const audioPath = `/assets/audio/description/${audioName}.m4a`;
+                    const audioPath = `/assets/audio/description/${audioName}.mp3`;
 
 
                     // Crear un elemento audio
@@ -182,7 +182,7 @@
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageData = canvas.toDataURL('image/jpeg');
 
-        fetch('http://localhost:5000/gestos/descripcion/predict', {  // Corregido el endpoint
+        fetch('/gestos/descripcion/predict', {  // Corregido el endpoint
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

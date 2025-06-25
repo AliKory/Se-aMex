@@ -125,7 +125,7 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Sidebar responsive */
+/* Sidebar */
 .sidebar {
     position: fixed;
     top: 70px;

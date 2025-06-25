@@ -127,7 +127,7 @@
         .catch(err => console.error('Error accessing camera:', err));
 
     function skipToNextVideo() {
-        fetch('http://localhost:5000/gestos/comunicacion/skip', {
+        fetch('/gestos/comunicacion/skip', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -145,44 +145,60 @@
     }
 
     function loadNewVideo() {
-        fetch('http://localhost:5000/gestos/comunicacion/get_current_video')  // Corregido el endpoint
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    const targetVideo = document.getElementById('targetVideo');
-                    targetVideo.src = data.video_url;
-                    targetLabel.textContent = data.target;
+    fetch('/gestos/comunicacion/get_current_video')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const targetVideo = document.getElementById('targetVideo');
+                const targetLabel = document.getElementById('targetLabel');
+                targetVideo.src = data.video_url;
 
-                    // Reproducir el video automáticamente
-                    targetVideo.play();
+                // Obtener el texto del target
+                let targetText = data.target;
 
-                    // Obtener el audio
-                    const audioName = data.target;
-                    const audioPath = `/assets/audio/conmunication/${audioName}.mp3`;
-
-
-                    // Crear un elemento audio
-                    const audioElement = new Audio(audioPath);
-
-                    // Manejar errores
-                    audioElement.onerror = () => {
-                        console.error('Error al cargar el audio:', audioPath);
-                    };
-
-                    // Reproducir el audio
-                    audioElement.play().catch(error => console.error('Error al reproducir audio:', error));
-                } else {
-                    console.error('Error al cargar el video:', data.message);
+                // Si comienza con '¿' y termina con '?', extraer solo el contenido interno
+                if (targetText.startsWith('¿') && targetText.endsWith('?')) {
+                    targetText = targetText.slice(1, -1); // quita el primer y último carácter
                 }
-            })
-            .catch(error => console.error('Error:', error));
-    }
+
+                targetLabel.textContent = targetText;
+
+                // Reproducir el video automáticamente
+                targetVideo.play();
+
+                // Obtener el audio (ya sin los signos ¿?)
+                const audioName = targetText;
+                const baseAudioPath = `/assets/audio/comunication/${audioName}`;
+                let audioElement = new Audio(`${baseAudioPath}.mp3`);
+
+                // Si falla el .mp3, intenta con .m4a
+                audioElement.onerror = () => {
+                    console.warn(`.mp3 no disponible, intentando con .m4a`);
+                    audioElement = new Audio(`${baseAudioPath}.m4a`);
+                    audioElement.onerror = () => {
+                        console.error('Error: No se pudo cargar ni .mp3 ni .m4a');
+                    };
+                    audioElement.play().catch(error =>
+                        console.error('Error al reproducir audio .m4a:', error)
+                    );
+                };
+
+                audioElement.play().catch(error =>
+                    console.error('Error al reproducir audio .mp3:', error)
+                );
+
+            } else {
+                console.error('Error al cargar el video:', data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
 
     function captureFrame() {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageData = canvas.toDataURL('image/jpeg');
 
-        fetch('http://localhost:5000/gestos/comunicacion/predict', {  // Corregido el endpoint
+        fetch('/gestos/comunicacion/predict', {  // Corregido el endpoint
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

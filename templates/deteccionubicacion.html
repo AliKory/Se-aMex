@@ -128,7 +128,7 @@
         .catch(err => console.error('Error accessing camera:', err));
 
     function skipToNextVideo() {
-        fetch('http://localhost:5000/gestos/ubicacion/skip', {
+        fetch('/gestos/ubicacion/skip', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -146,44 +146,50 @@
     }
 
     function loadNewVideo() {
-        fetch('http://localhost:5000/gestos/ubicacion/get_current_video')  // Corregido el endpoint
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    const targetVideo = document.getElementById('targetVideo');
-                    targetVideo.src = data.video_url;
-                    targetLabel.textContent = data.target;
+    fetch('/gestos/ubicacion/get_current_video')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const targetVideo = document.getElementById('targetVideo');
+                targetVideo.src = data.video_url;
+                targetLabel.textContent = data.target;
 
-                    // Reproducir el video automáticamente
-                    targetVideo.play();
+                // Reproducir el video automáticamente
+                targetVideo.play();
 
-                    // Obtener el audio
-                    const audioName = data.target;
-                    const audioPath = `/assets/audio/location/${audioName}.m4a`;
+                // Obtener el nombre limpio del audio
+                let audioName = data.target;
 
-
-                    // Crear un elemento audio
-                    const audioElement = new Audio(audioPath);
-
-                    // Manejar errores
-                    audioElement.onerror = () => {
-                        console.error('Error al cargar el audio:', audioPath);
-                    };
-
-                    // Reproducir el audio
-                    audioElement.play().catch(error => console.error('Error al reproducir audio:', error));
-                } else {
-                    console.error('Error al cargar el video:', data.message);
+                // Si comienza con ¿ y termina con ?, extraer solo el contenido interno
+                const match = audioName.match(/^¿(.+)\?$/);
+                if (match) {
+                    audioName = match[1];
                 }
-            })
-            .catch(error => console.error('Error:', error));
-    }
+
+                const audioPath = `/assets/audio/location/${audioName}.m4a`;
+
+                // Crear un elemento audio
+                const audioElement = new Audio(audioPath);
+
+                // Manejar errores
+                audioElement.onerror = () => {
+                    console.error('Error al cargar el audio:', audioPath);
+                };
+
+                // Reproducir el audio
+                audioElement.play().catch(error => console.error('Error al reproducir audio:', error));
+            } else {
+                console.error('Error al cargar el video:', data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
 
     function captureFrame() {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageData = canvas.toDataURL('image/jpeg');
 
-        fetch('http://localhost:5000/gestos/ubicacion/predict', {  // Corregido el endpoint
+        fetch('/gestos/ubicacion/predict', {  // Corregido el endpoint
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

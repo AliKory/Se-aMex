@@ -129,7 +129,7 @@
         .catch(err => console.error('Error accessing camera:', err));
 
     function skipToNextVideo() {
-        fetch('http://localhost:5000/gestos/presentacion/skip', {
+        fetch('/gestos/presentacion/skip', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -147,7 +147,7 @@
     }
 
     function loadNewVideo() {
-        fetch('http://localhost:5000/gestos/presentacion/get_current_video')
+        fetch('/gestos/presentacion/get_current_video')
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
@@ -188,7 +188,7 @@
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageData = canvas.toDataURL('image/jpeg');
 
-        fetch('http://localhost:5000/gestos/presentacion/predict', {
+        fetch('/gestos/presentacion/predict', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
