@@ -144,38 +144,54 @@
     }
 
     function loadNewVideo() {
-        fetch('/gestos/conducta/get_current_video')  // Corregido el endpoint
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    const targetVideo = document.getElementById('targetVideo');
-                    targetVideo.src = data.video_url;
-                    targetLabel.textContent = data.target;
+    fetch('/gestos/conducta/get_current_video')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                const targetVideo = document.getElementById('targetVideo');
+                
+                // Limpiar fuente anterior
+                targetVideo.src = '';
+                
+                // Configurar nueva fuente
+                targetVideo.src = data.video_url;
+                targetVideo.load(); // Forzar recarga
+                
+                targetLabel.textContent = data.target;
 
-                    // Reproducir el video automáticamente
-                    targetVideo.play();
+                // Manejar eventos de error del video
+                targetVideo.onerror = () => {
+                    console.error('Error loading video:', targetVideo.error);
+                    resultDiv.textContent = 'Error cargando el video';
+                };
 
-                    // Obtener el audio
-                    const audioName = data.target;
-                    const audioPath = `/assets/audio/conduct/${audioName}.mp3`;
+                targetVideo.onloadeddata = () => {
+                    targetVideo.play().catch(e => {
+                        console.error('Video play failed:', e);
+                    });
+                };
 
-
-                    // Crear un elemento audio
-                    const audioElement = new Audio(audioPath);
-
-                    // Manejar errores
-                    audioElement.onerror = () => {
-                        console.error('Error al cargar el audio:', audioPath);
-                    };
-
-                    // Reproducir el audio
-                    audioElement.play().catch(error => console.error('Error al reproducir audio:', error));
-                } else {
-                    console.error('Error al cargar el video:', data.message);
+                // Reproducir audio si existe
+                if (data.target) {
+                    const audioPath = `/assets/audio/conduct/${data.target}.mp3`;
+                    const audio = new Audio(audioPath);
+                    audio.play().catch(e => console.error('Audio error:', e));
                 }
-            })
-            .catch(error => console.error('Error:', error));
-    }
+            } else {
+                console.error('Server error:', data.message);
+                resultDiv.textContent = 'Error del servidor';
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            resultDiv.textContent = 'Error de conexión';
+        });
+}
 
     function captureFrame() {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);

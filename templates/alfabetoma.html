@@ -17,8 +17,6 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
   <!-- Core theme CSS (includes Bootstrap)-->
   <link href="/css/styles_alfabeto.css" rel="stylesheet" />
-  <script src="http://localhost:3000/socket.io/socket.io.min.js" defer></script>
-  <script src="/js/scriptm.js" defer></script>
 </head>
 <body>
 
@@ -64,43 +62,109 @@
                 </div>
                 
                 <div class="sign-image-container">
-                    <div id="imagenContenedor"></div>
-                      <a class="btn btn-primary" href="./alfabeto.html"></a>
-                    </div>
+                    <div id="imagenContenedor" class="sign-image-wrapper"></div>
+                    <a class="btn btn-primary" href="./alfabeto.html"></a>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Menú hamburguesa
-    const hamburger = document.createElement('div');
-    hamburger.className = 'hamburger';
-    hamburger.innerHTML = `
-        <span></span>
-        <span></span>
-        <span></span>
-    `;
-    
-    const navbar = document.querySelector('.container_navbar');
-    const navItems = document.querySelector('.nav-items');
-    
-    // Insertar hamburguesa antes de los nav-items
-    navbar.insertBefore(hamburger, navItems);
-    
-    // Toggle del menú
-    hamburger.addEventListener('click', function() {
-        this.classList.toggle('active');
-        navItems.classList.toggle('active');
-    });
-    
-    // Cerrar menú al hacer clic en un enlace
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', function() {
-            hamburger.classList.remove('active');
-            navItems.classList.remove('active');
+        // Mapeo de letras a sus archivos (ajusta las rutas según tu estructura)
+        const recursosPorLetra = {
+            'a': { imagen: '/static/sign_images/alphabet/a.jpeg'},
+            'b': { imagen: '/static/sign_images/alphabet/b.jpeg'},
+            'c': { imagen: '/static/sign_images/alphabet/c.jpeg'},
+            'd': { imagen: '/static/sign_images/alphabet/d.jpeg'},
+            'e': { imagen: '/static/sign_images/alphabet/e.jpeg'},
+            'f': { imagen: '/static/sign_images/alphabet/f.jpeg'},
+            'g': { imagen: '/static/sign_images/alphabet/g.jpeg'},
+            'h': { imagen: '/static/sign_images/alphabet/h.jpeg'},
+            'i': { imagen: '/static/sign_images/alphabet/i.jpeg'},
+            'j': { imagen: '/static/sign_images/alphabet/j.jpeg'},
+            'k': { imagen: '/static/sign_images/alphabet/k.jpeg'},
+            'l': { imagen: '/static/sign_images/alphabet/l.jpeg'},
+            'm': { imagen: '/static/sign_images/alphabet/m.jpeg'},
+            'n': { imagen: '/static/sign_images/alphabet/n.jpeg'},
+            'ñ': { imagen: '/static/sign_images/alphabet/ñ.jpeg'},
+            'o': { imagen: '/static/sign_images/alphabet/o.jpeg'},
+            'p': { imagen: '/static/sign_images/alphabet/p.jpeg'},
+            'q': { imagen: '/static/sign_images/alphabet/q.jpeg'},
+            'r': { imagen: '/static/sign_images/alphabet/r.jpeg'},
+            's': { imagen: '/static/sign_images/alphabet/s.jpeg'},
+            't': { imagen: '/static/sign_images/alphabet/t.jpeg'},
+            'u': { imagen: '/static/sign_images/alphabet/u.jpeg'},
+            'v': { imagen: '/static/sign_images/alphabet/v.jpeg'},
+            'w': { imagen: '/static/sign_images/alphabet/w.jpeg'},
+            'x': { imagen: '/static/sign_images/alphabet/x.jpeg'},
+            'y': { imagen: '/static/sign_images/alphabet/y.jpeg'},
+            'z': { imagen: '/static/sign_images/alphabet/z.jpeg'},
+        };
+
+        document.getElementById('letraInput').addEventListener('input', (e) => {
+            const letra = e.target.value.toLowerCase();
+            
+            // Validar que sea una letra permitida
+            if (letra.length === 1 && letra.match(/[a-zñ]/i)) {
+                const recursos = recursosPorLetra[letra];
+                
+                // Mostrar imagen
+                if (recursos && recursos.imagen) {
+                    document.getElementById('imagenContenedor').innerHTML = `
+                        <img src="${recursos.imagen}" alt="Seña para ${letra.toUpperCase()}">
+                    `;
+                } else {
+                    console.error(`No hay imagen para la letra ${letra}`);
+                }
+
+                // Reproducir audio (opcional)
+                if (recursos && recursos.audio) {
+                    new Audio(recursos.audio).play().catch(e => console.log("Error con audio:", e));
+                }
+            } else if (letra.length > 0) {
+                e.target.value = ''; // Limpiar si no es válido
+                alert("Ingresa solo una letra (A-Z o Ñ)");
+            }
         });
-    });
+
+        // Enfocar el input al cargar la página
+        window.onload = () => document.getElementById('letraInput').focus();
     </script>
+
+
+    <script>
+        // Menú hamburguesa modificado
+        const hamburger = document.createElement('div');
+        hamburger.className = 'hamburger';
+        hamburger.innerHTML = `
+            <span></span>
+            <span></span>
+            <span></span>
+        `;
+            
+        const navbar = document.querySelector('.container_navbar');
+        const navItems = document.querySelector('.nav-items');
+        const body = document.body;
+            
+        // Insertar hamburguesa antes de los nav-items
+        navbar.insertBefore(hamburger, navItems);
+            
+        // Toggle del menú
+        hamburger.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navItems.classList.toggle('active');
+            body.classList.toggle('menu-open');
+        });
+        
+        // Cerrar menú al hacer clic en un enlace
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                hamburger.classList.remove('active');
+                navItems.classList.remove('active');
+                body.classList.remove('menu-open');
+            });
+        });
+    </script>
+    
 </body>
 </html>

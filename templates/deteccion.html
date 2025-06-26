@@ -327,6 +327,25 @@
         });
     });
     </script>
+
+    <script>
+        window.addEventListener('load', function() {
+            if (window.innerWidth >= 992) {
+                document.querySelector('.hero').style.marginLeft = '250px';
+            }
+        });
+        
+        // Ajustar al cambiar tamaño de pantalla
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 992) {
+                sidebar.classList.add('active');
+                document.querySelector('.hero').style.marginLeft = '250px';
+            } else {
+                sidebar.classList.remove('active');
+                document.querySelector('.hero').style.marginLeft = '0';
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -16,6 +16,10 @@ CORS(app)
 def static_files(filename):
     return send_from_directory('static', filename)
 
+@app.route('/sockets/<path:filename>')
+def serve_sockets(filename):
+    return send_from_directory(os.path.join(app.root_path, 'sockets'), filename)
+
 @app.route('/assets/<path:filename>')
 def assets_files(filename):
     return send_from_directory('assets', filename)
@@ -110,7 +114,7 @@ labels_dictps = {0:'Emergencia',1:'Cuidado',2:'Peligro',3:'Problema',4:'Accident
 # Etiquetas del modelo Estados de Ánimo
 labels_dictes = {0:'Tranquilo', 1:'Distraído', 2:'Confianza', 3:'Confundido', 4:'Sentir', 5:'Quiero', 6:'No quiero', 7:'Mejor', 8:'Peor', 9:'Grave', 10:'Me siento débil'}
 #Etiquetas del modelo Conducta
-labels_dictsb = {0:'Enfermo', 1:'Gripe', 2:'Báñate', 3:'Desayuna', 4:'Almuerzo', 5:'Come'}
+labels_dictc = { 0: 'Regañar', 1: 'Castigar', 2: 'Obedecer', 3: 'Travieso', 4: 'Educado', 5: 'Responsable', 6: 'Respeto', 7: 'Tramposo',8: 'No hagas caso', 9: 'Grosero', 10: 'Burla', 11: 'Criticar', 12: 'Evitar', 13: 'Participar', 14: 'Levantar la mano', 15: 'Permiso', 16: 'Quitar', 17: 'Ni modo', 18: 'Aguantate', 19: 'Reglas', 20: 'Fila', 21: 'Silencio', 22: 'Cállate',    23: 'Necio', 24: 'No gritar', 25: 'Siéntate', 26: 'Ponte de pie',27: 'No correr', 28: 'No empujar', 29: 'Pelear', 30: 'Bullying',31: 'Perdón', 32: 'Disculpa', 33: 'Ya'}
 #Etiquetas del modelo Salud y Bienestar
 labels_dictsb = {0:'Enfermo', 1:'Gripe', 2:'Báñate', 3:'Desayuna', 4:'Almuerzo', 5:'Come'}
 #Etiquetas del modelo Familia

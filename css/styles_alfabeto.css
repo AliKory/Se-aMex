@@ -259,6 +259,33 @@ h1 {
     font-style: italic;
 }
 
+/* Estilos para el contenedor de la imagen */
+.sign-image-container {
+    max-height: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.sign-image-wrapper {
+    width: 100%;
+    height: 300px; /* Altura fija para el contenedor */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 10px;
+    background-color: var(--gray-100);
+}
+
+#imagenContenedor img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Mantiene la proporción de la imagen */
+    display: block;
+}
+
 /* Smartphones pequeños: 393x852, 430x932, etc. */
 @media (max-width: 480px) {
   .main-container {
