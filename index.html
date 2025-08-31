@@ -21,9 +21,12 @@
 				<h1>Ingresar</h1>
 				<input type="text" name="login_email" id="login_email" class="form-control" placeholder="Email"
 					autofocus>
-				<input type="password" name="login_password" id="login_password" class="form-control"
-					placeholder="Contraseña">
+				<div class="input-wrapper">
+				  <input type="password" id="login_password" class="form-control" placeholder="Contraseña">
+				  <img src="./assets/iconos/cerrar-ojo.png" id="togglePassword" class="toggle-password">
+				</div>
 				<div class="content">
+					<span><a href="#" onclick="forgotPassword()">¿Olvidaste tu contraseña?</a></span>
 				</div>
 				<button type="button" id="login" name="login" class="button">
 					Ingresar
@@ -61,8 +64,16 @@
 						</button>
 					</form>
 				</div>
-
 			</div>
+		</div>
+
+		<div id="forgotModal" class="modal">
+		  <div class="modal-content">
+		    <span onclick="closeModal()" class="close">&times;</span>
+		    <h2>Recuperar contraseña</h2>
+		    <input type="email" id="recoverEmail" placeholder="Escribe tu correo">
+		    <button onclick="sendRecovery()">Enviar enlace</button>
+		  </div>
 		</div>
 
 	</div>
@@ -102,6 +113,71 @@
 	const analytics = getAnalytics(app);
 	const auth = getAuth();
 	console.log(app);
+
+	import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+
+	const togglePassword = document.getElementById("togglePassword");
+	const passwordField = document.getElementById("login_password");
+	const modal = document.getElementById("myModal");
+	const btn = document.getElementById("openModal");
+	const closeBtn = document.querySelector(".close");
+
+	togglePassword.addEventListener("click", () => {
+	  if (passwordField.type === "password") {
+	    passwordField.type = "text";
+	    togglePassword.src = "assets/iconos/ojo.png"; 
+	  } else {
+	    passwordField.type = "password";
+	    togglePassword.src = "assets/iconos/cerrar-ojo.png"; 
+	  }
+	});
+
+
+
+	window.forgotPassword = function () {
+	  document.getElementById("forgotModal").style.display = "block";
+	};
+
+	window.closeModal = function () {
+	  document.getElementById("forgotModal").style.display = "none";
+	};
+
+	window.sendRecovery = function () {
+	const email = document.getElementById("recoverEmail").value;
+	
+	if (!email) {
+	  Swal.fire({
+	    icon: 'warning',
+	    title: 'Atención',
+	    text: 'Por favor escribe tu correo',
+	  });
+	  return;
+	}
+
+	sendPasswordResetEmail(auth, email)
+	  .then(() => {
+	    Swal.fire({
+	      icon: 'success',
+	      title: 'Correo enviado',
+	      text: `Se ha enviado un enlace de recuperación a ${email}`,
+	    });
+	    closeModal();
+	  })
+	  .catch((error) => {
+	    console.error(error);
+	    const errorMessage = mensajesError[error.code] || 'Ocurrió un error al enviar el correo';
+	    Swal.fire({
+	      icon: 'error',
+	      title: 'Error',
+	      text: errorMessage,
+	    });
+	  });
+	};
+
+
+
+
+
 
 	// Función para proteger rutas
 	export function protectRoute(redirectTo = "login.html") {
