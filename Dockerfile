@@ -1,7 +1,8 @@
 FROM python:3.10-slim
 
-# Instalar dependencias del sistema
-RUN apt-get update && apt-get install -y \
+# Instalar dependencias del sistema con reintentos
+RUN apt-get update --fix-missing || apt-get update --fix-missing && \
+    apt-get install -y \
     build-essential \
     libgl1-mesa-glx \
     libglib2.0-0 \
