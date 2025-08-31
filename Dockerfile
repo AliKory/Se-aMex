@@ -1,14 +1,14 @@
-FROM python:3.10-slim
+FROM python:3.10-bookworm
 
-# Todos los comandos apt deben estar en el mismo RUN
 RUN apt-get update && apt-get install -y \
     build-essential \
     libgl1-mesa-glx \
     libglib2.0-0 \
     curl \
-    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
+
+# Instalar Node.js desde binaries
+RUN curl -fsSL https://nodejs.org/dist/v18.17.0/node-v18.17.0-linux-x64.tar.xz | tar -xJ -C /usr/local --strip-components=1
 
 WORKDIR /app
 COPY requirements.txt ./
