@@ -1,5 +1,5 @@
 # Imagen base de Python 3.10 slim
-FROM python:3.10-slim
+FROM python:3.10
 
 # Evitar interacción durante la instalación de paquetes
 ENV DEBIAN_FRONTEND=noninteractive
